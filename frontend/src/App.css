@@ -1559,15 +1559,13 @@
 
 
 /* CateLink logo: calm floating motion with a gentle sparkle */
-.brand-mark-animated { position: relative; animation: cateLinkFloat 3.8s ease-in-out infinite; }
-.brand-mark-animated::before, .brand-mark-animated::after { content: "✦"; position: absolute; color: var(--gold); font-size: 15px; opacity: 0; animation: cateLinkTwinkle 2.4s ease-in-out infinite; }
-.brand-mark-animated::before { top: 4px; right: 7px; }
-.brand-mark-animated::after { bottom: 3px; left: 8px; font-size: 11px; animation-delay: 1.1s; }
-.fish-mark path { stroke-dasharray: 1; animation: fishGlow 3.2s ease-in-out infinite; }
-.fish-mark-green { animation-delay: .35s !important; }
-@keyframes cateLinkFloat { 0%,100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-5px) rotate(-1deg); } }
-@keyframes cateLinkTwinkle { 0%,100% { opacity: 0; transform: scale(.55) rotate(-15deg); } 35%,65% { opacity: 1; transform: scale(1) rotate(12deg); } }
-@keyframes fishGlow { 0%,100% { filter: drop-shadow(0 0 0 transparent); } 50% { filter: drop-shadow(0 0 4px rgb(197 158 76 / 32%)); } }
+.brand-mark-animated { position: relative; animation: cateLinkFloat 4.8s ease-in-out infinite; }
+.brand-mark-animated::before, .brand-mark-animated::after { content: ""; position: absolute; width: 7px; height: 7px; border: 1.5px solid var(--gold); border-radius: 50%; opacity: .72; pointer-events: none; animation: fishBubbleRise 3.6s ease-in-out infinite; }
+.brand-mark-animated::before { top: 24px; right: 5px; }
+.brand-mark-animated::after { bottom: 18px; left: 3px; width: 5px; height: 5px; animation-delay: 1.8s; }
+.fish-mark path { stroke-dasharray: none; filter: drop-shadow(0 1px 1px rgb(35 74 58 / 8%)); }
+@keyframes cateLinkFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+@keyframes fishBubbleRise { 0% { opacity: .25; transform: translateY(5px) scale(.8); } 45% { opacity: .72; } 100% { opacity: 0; transform: translateY(-15px) scale(1.08); } }
 @media (prefers-reduced-motion: reduce) { .brand-mark-animated, .brand-mark-animated::before, .brand-mark-animated::after, .fish-mark path { animation: none !important; } }
 
 .admin-page { min-height: 100svh; display: grid; grid-template-columns: 240px minmax(0,1fr); background: var(--panel); color: var(--ink); }

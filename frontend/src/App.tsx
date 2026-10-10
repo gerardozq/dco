@@ -1403,12 +1403,14 @@ function App() {
 
   const visibleMentors = MENTORS
     .filter((mentor) =>
-      (filters.time === 'Any' || mentor.availability.includes(filters.time))
+      mentor != null
+      && (filters.time === 'Any' || mentor.availability?.includes(filters.time))
       && (filters.parish === 'Any' || mentor.parish === filters.parish)
       && (filters.area === 'Any' || mentor.area === filters.area),
     )
     .sort((first, second) => getMentorFit(second, profile) - getMentorFit(first, profile))
-  const selectedMentor = MENTORS.find((mentor) => mentor.id === selectedMentorId)
+  // Ignore any empty entries in the mentor list so rendering never crashes.
+  const selectedMentor = MENTORS.find((mentor) => mentor != null && mentor.id === selectedMentorId)
   const otherMatches = visibleMentors.filter((mentor) => mentor.id !== selectedMentorId).slice(0, 3)
   const hasSharedAvailability = selectedMentor?.availability.some((slot) =>
     profile.availability.includes(slot),
