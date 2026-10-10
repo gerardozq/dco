@@ -1402,6 +1402,8 @@ function App() {
     .join('')
 
   const visibleMentors = MENTORS
+    // Keep the discovery screen focused on the seven curated demo profiles.
+    .slice(0, 7)
     .filter((mentor) =>
       mentor != null
       && (filters.time === 'Any' || mentor.availability?.includes(filters.time))
