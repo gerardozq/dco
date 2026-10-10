@@ -6,8 +6,13 @@ import App from './App'
 
 afterEach(cleanup)
 
+async function startProfileSetup(user: ReturnType<typeof userEvent.setup>) {
+  await user.type(screen.getByRole('textbox', { name: 'Email' }), 'catechist@example.com')
+  await user.click(screen.getByRole('button', { name: 'Send me a sign-in link' }))
+}
+
 async function finishProfile(user: ReturnType<typeof userEvent.setup>) {
-  await user.click(screen.getByRole('button', { name: 'Preview profile setup' }))
+  await startProfileSetup(user)
   await user.type(screen.getByRole('textbox', { name: 'Full name' }), 'Gerald Lim')
   await user.click(screen.getByRole('button', { name: 'Next' }))
   await user.click(screen.getByRole('button', { name: 'Primary' }))
@@ -35,23 +40,11 @@ test('renders the CateLink welcome screen', () => {
   expect(screen.getByText(/No password to remember/)).toBeDefined()
 })
 
-test('clearly explains that sign-in is not connected yet', async () => {
-  const user = userEvent.setup()
-  render(<App />)
-
-  await user.type(screen.getByRole('textbox', { name: 'Email' }), 'catechist@example.com')
-  await user.click(screen.getByRole('button', { name: 'Send me a sign-in link' }))
-
-  expect(screen.getByRole('status').textContent).toBe(
-    'Sign-in is not connected yet. Email links will be added in a later step.',
-  )
-})
-
 test('validates profile steps and keeps choices while moving back', async () => {
   const user = userEvent.setup()
   render(<App />)
 
-  await user.click(screen.getByRole('button', { name: 'Preview profile setup' }))
+  await startProfileSetup(user)
   await user.click(screen.getByRole('button', { name: 'Next' }))
   expect(screen.getByRole('alert').textContent).toMatch(/Add your full name/)
 
@@ -73,7 +66,7 @@ test('limits teaching styles and requires at least one availability slot', async
   const user = userEvent.setup()
   render(<App />)
 
-  await user.click(screen.getByRole('button', { name: 'Preview profile setup' }))
+  await startProfileSetup(user)
   await user.type(screen.getByRole('textbox', { name: 'Full name' }), 'Gerald Lim')
   await user.click(screen.getByRole('button', { name: 'Next' }))
   await user.click(screen.getByRole('button', { name: 'Primary' }))
@@ -117,7 +110,7 @@ test('learning goals are included in mentor match explanations', async () => {
   const user = userEvent.setup()
   render(<App />)
 
-  await user.click(screen.getByRole('button', { name: 'Preview profile setup' }))
+  await startProfileSetup(user)
   await user.type(screen.getByRole('textbox', { name: 'Full name' }), 'Gerald Lim')
   await user.click(screen.getByRole('button', { name: 'Next' }))
   await user.click(screen.getByRole('button', { name: 'Primary' }))
