@@ -1707,7 +1707,9 @@ body { background: var(--mesh); background-attachment: fixed; }
 .mentor-filters select { padding: 10px 12px; }
 .clear-filters { border-radius: 999px; padding: 9px 15px; }
 .bubble-stage { min-height: 340px; margin-top: 18px; border: 1px solid var(--glass-line); border-radius: 30px; background: linear-gradient(180deg, rgba(255,255,255,.42), rgba(255,255,255,.14)); box-shadow: inset 0 1px 0 rgba(255,255,255,.85), var(--shadow); }
-.mentor-bubbles { min-height: 340px; gap: 12px; padding: 58px 18px 20px; }
+.mentor-bubbles { min-height: 340px; height: auto; overflow: visible; display: flex; flex-wrap: wrap; align-content: flex-start; gap: 12px; padding: 58px 18px 20px; }
+.bubble-stage { height: auto; overflow: visible; }
+.mentor-bubble { flex-shrink: 0; }
 .bubble-count { border-color: var(--glass-line); background: var(--glass-strong); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); }
 .mentor-bubble { border: 1px solid rgba(255,255,255,.95); box-shadow: inset 0 -10px 20px rgba(255,255,255,.24), 0 12px 26px rgba(90,70,130,.18); }
 .tone-0 { background: rgba(150,208,236,.92); color: #0b2a3a; }

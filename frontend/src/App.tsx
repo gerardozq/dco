@@ -1025,7 +1025,7 @@ function getMentorFit(mentor: Mentor, profile: Profile) {
 
 const INITIAL_PROFILE: Profile = {
   name: '',
-  parish: 'Holy Family',
+  parish: '',
   intent: 'Find a mentor',
   groups: [],
   seniority: 'New',
@@ -1419,6 +1419,7 @@ function App() {
       && (filters.area === 'Any' || mentor.area === filters.area),
     )
     .sort((first, second) => getMentorFit(second, profile) - getMentorFit(first, profile))
+    .slice(0, 50)
   // Ignore any empty entries in the mentor list so rendering never crashes.
   const selectedMentor = MENTORS.find((mentor) => mentor != null && mentor.id === selectedMentorId)
   const otherMatches = visibleMentors.filter((mentor) => mentor.id !== selectedMentorId).slice(0, 3)
@@ -2702,7 +2703,7 @@ function App() {
 
             <div className="profile-field">
               <label className="field-label" htmlFor="profile-parish">Parish</label>
-              <input className="profile-input" id="profile-parish" list="singapore-parishes" onChange={(event) => updateProfile('parish', event.target.value)} placeholder="Choose or type your parish" value={profile.parish} />
+              <input className="profile-input" id="profile-parish" list="singapore-parishes" onChange={(event) => updateProfile('parish', event.target.value)} value={profile.parish} />
               <datalist id="singapore-parishes">{PARISHES.map((parish) => <option key={parish} value={parish} />)}</datalist>
             </div>
 
