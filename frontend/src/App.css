@@ -475,7 +475,7 @@
   position: relative;
   min-height: 300px;
   margin-top: 16px;
-  overflow: hidden;
+  overflow: visible;
   border: 1px solid var(--line);
   border-radius: 22px;
   background: linear-gradient(180deg, var(--sky, #cbebf7), var(--surface) 125%);
@@ -498,7 +498,7 @@
   display: flex;
   min-height: 300px;
   flex-wrap: wrap;
-  align-content: center;
+  align-content: flex-start;
   justify-content: center;
   gap: 12px;
   padding: 54px 18px 18px;

@@ -92,7 +92,7 @@ test('filters demo mentors, explains fit, and handles an empty result', async ()
   render(<App />)
   await finishProfile(user)
 
-  expect(screen.getByRole('status').textContent).toBe('7 mentors fit you')
+  expect(screen.getByRole('status').textContent).toBe('57 mentors fit you')
   await user.selectOptions(screen.getByRole('combobox', { name: 'Filter by parish' }), 'Church of the Nativity of the Blessed Virgin Mary')
   await user.selectOptions(screen.getByRole('combobox', { name: 'Filter by time' }), 'Weekday morning')
   expect(screen.getByRole('status').textContent).toBe('No mentor fits all filters')

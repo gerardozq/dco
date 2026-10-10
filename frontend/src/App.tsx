@@ -788,8 +788,8 @@ const MENTORS: Mentor[] = [
     bio: 'Has experience guiding young people and sharing faith through conversation.',
   },
   {
-    id: 'demo-filipino-39',
-    name: 'Miguel Santos',
+    id: 'demo-chinese-14',
+    name: 'Rachel Lim',
     parish: 'Church of the Risen Christ',
     area: 'West',
     groups: ['Primary', 'Special needs'],
@@ -803,8 +803,8 @@ const MENTORS: Mentor[] = [
     bio: 'Loves creating welcoming, activity-based lessons for children.',
   },
   {
-    id: 'demo-filipino-40',
-    name: 'Angela Reyes',
+    id: 'demo-chinese-15',
+    name: 'Jonathan Goh',
     parish: 'Church of Our Lady of Lourdes',
     area: 'Central',
     groups: ['Youth', 'Secondary'],
@@ -818,8 +818,8 @@ const MENTORS: Mentor[] = [
     bio: 'Offers a calm, encouraging perspective on the everyday challenges of catechesis.',
   },
   {
-    id: 'demo-filipino-41',
-    name: 'Joshua dela Cruz',
+    id: 'demo-chinese-16',
+    name: 'Cheryl Ong',
     parish: 'Church of St Ignatius',
     area: 'East',
     groups: ['Primary'],
@@ -833,8 +833,8 @@ const MENTORS: Mentor[] = [
     bio: 'Enjoys helping new catechists build confidence and plan engaging lessons.',
   },
   {
-    id: 'demo-filipino-42',
-    name: 'Maria Garcia',
+    id: 'demo-chinese-17',
+    name: 'Wei Jie Tan',
     parish: 'Church of the Holy Family',
     area: 'West',
     groups: ['Secondary'],
@@ -848,8 +848,8 @@ const MENTORS: Mentor[] = [
     bio: 'Supports fellow catechists with practical classroom ideas and prayerful reflection.',
   },
   {
-    id: 'demo-filipino-43',
-    name: 'Paolo Mendoza',
+    id: 'demo-indonesian-39',
+    name: 'Nicholas Gunawan',
     parish: 'Church of the Holy Spirit',
     area: 'Central',
     groups: ['Youth'],
@@ -863,8 +863,8 @@ const MENTORS: Mentor[] = [
     bio: 'Has experience guiding young people and sharing faith through conversation.',
   },
   {
-    id: 'demo-filipino-44',
-    name: 'Therese Bautista',
+    id: 'demo-indonesian-40',
+    name: 'Felicia Wijaya',
     parish: 'Church of St Vincent de Paul',
     area: 'East',
     groups: ['Primary', 'Special needs'],
@@ -878,8 +878,8 @@ const MENTORS: Mentor[] = [
     bio: 'Loves creating welcoming, activity-based lessons for children.',
   },
   {
-    id: 'demo-filipino-45',
-    name: 'Gabriel Flores',
+    id: 'demo-indonesian-41',
+    name: 'Monica Hartono',
     parish: 'Church of the Sacred Heart',
     area: 'West',
     groups: ['Youth', 'Secondary'],
@@ -893,8 +893,8 @@ const MENTORS: Mentor[] = [
     bio: 'Offers a calm, encouraging perspective on the everyday challenges of catechesis.',
   },
   {
-    id: 'demo-filipino-46',
-    name: 'Camille Aquino',
+    id: 'demo-indonesian-42',
+    name: 'Jonathan Kusuma',
     parish: 'Church of St Francis Xavier',
     area: 'Central',
     groups: ['Primary'],
@@ -908,8 +908,8 @@ const MENTORS: Mentor[] = [
     bio: 'Enjoys helping new catechists build confidence and plan engaging lessons.',
   },
   {
-    id: 'demo-filipino-47',
-    name: 'Nathaniel Ramos',
+    id: 'demo-indian-27',
+    name: 'Arjun Menon',
     parish: 'Church of the Risen Christ',
     area: 'East',
     groups: ['Secondary'],
@@ -923,8 +923,8 @@ const MENTORS: Mentor[] = [
     bio: 'Supports fellow catechists with practical classroom ideas and prayerful reflection.',
   },
   {
-    id: 'demo-filipino-48',
-    name: 'Patricia Villanueva',
+    id: 'demo-indian-28',
+    name: 'Sneha Nair',
     parish: 'Church of Our Lady of Lourdes',
     area: 'West',
     groups: ['Youth'],
@@ -938,8 +938,8 @@ const MENTORS: Mentor[] = [
     bio: 'Has experience guiding young people and sharing faith through conversation.',
   },
   {
-    id: 'demo-filipino-49',
-    name: 'Francis Castillo',
+    id: 'demo-indian-29',
+    name: 'Rishi Pillai',
     parish: 'Church of St Ignatius',
     area: 'Central',
     groups: ['Primary', 'Special needs'],
@@ -953,8 +953,8 @@ const MENTORS: Mentor[] = [
     bio: 'Loves creating welcoming, activity-based lessons for children.',
   },
   {
-    id: 'demo-filipino-50',
-    name: 'Isabel Fernandez',
+    id: 'demo-indian-30',
+    name: 'Kavitha Rajan',
     parish: 'Church of the Holy Family',
     area: 'East',
     groups: ['Youth', 'Secondary'],
@@ -1412,8 +1412,6 @@ function App() {
     .join('')
 
   const visibleMentors = MENTORS
-    // Keep the discovery screen focused on the seven curated demo profiles.
-    .slice(0, 7)
     .filter((mentor) =>
       mentor != null
       && (filters.time === 'Any' || mentor.availability?.includes(filters.time))
