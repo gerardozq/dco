@@ -10,7 +10,7 @@ test('renders the starter and initial checklist progress', () => {
   render(<App />)
   expect(screen.getByRole('heading', { name: /Small app\.\s*Big possibilities\./ })).toBeDefined()
   expect(screen.getAllByRole('checkbox')).toHaveLength(4)
-  expect(screen.getByRole('heading', { name: 'A clear path to GHCR' })).toBeDefined()
+  expect(screen.getByRole('heading', { name: 'A clear path to Beanstalk' })).toBeDefined()
   expect(screen.getByRole('status').textContent).toBe('1 of 4 complete')
 })
 

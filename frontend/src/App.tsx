@@ -4,8 +4,8 @@ import './App.css'
 const initialTasks = [
   { id: 'app', label: 'Explore the React app', done: true },
   { id: 'github', label: 'Review the GitHub Actions workflow', done: false },
-  { id: 'registry', label: 'Choose your GHCR package visibility', done: false },
-  { id: 'publish', label: 'Publish your first container image', done: false },
+  { id: 'environment', label: 'Configure your Elastic Beanstalk environment', done: false },
+  { id: 'deploy', label: 'Deploy your first application version', done: false },
 ]
 
 function App() {
@@ -26,7 +26,7 @@ function App() {
         <h1 id="welcome-title">Small app.<br /><span>Big possibilities.</span></h1>
         <p className="intro">
           Your next project starts here. A lightweight React frontend,
-          packaged with Docker and ready to publish to GitHub Container Registry.
+          packaged with Docker and ready to deploy to AWS Elastic Beanstalk.
         </p>
         <a className="primary-link" href="#launch-checklist">Start your launch checklist &rarr;</a>
       </section>
@@ -43,9 +43,9 @@ function App() {
           <p>A multi-stage Docker build with Nginx serving your production app.</p>
         </article>
         <article className="card">
-          <span className="card-number">03 / PUBLISH</span>
-          <h2>A clear path to GHCR</h2>
-          <p>GitHub Actions publishes commit-tagged images using its built-in token.</p>
+          <span className="card-number">03 / DEPLOY</span>
+          <h2>A clear path to Beanstalk</h2>
+          <p>GitHub Actions deploys a Docker source bundle to your AWS environment.</p>
         </article>
       </section>
 
@@ -53,7 +53,7 @@ function App() {
         <div>
           <p className="eyebrow">YOUR NEXT STEPS</p>
           <h2 id="checklist-title">Launch checklist</h2>
-          <p>This demo checklist resets when you reload. It does not track image publishing status.</p>
+          <p>This demo checklist resets when you reload. It does not track deployment status.</p>
           <p className="progress-label" role="status">{completed} of {tasks.length} complete</p>
           <progress value={completed} max={tasks.length} aria-label="Checklist progress" />
         </div>

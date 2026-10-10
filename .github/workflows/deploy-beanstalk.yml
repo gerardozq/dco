@@ -1,0 +1,112 @@
+name: Validate and deploy frontend to Elastic Beanstalk
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+
+  deploy:
+    needs: validate
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: elastic-beanstalk-main
+      cancel-in-progress: false
+    env:
+      AWS_REGION: ${{ vars.AWS_REGION }}
+      EB_APPLICATION_NAME: ${{ vars.EB_APPLICATION_NAME }}
+      EB_ENVIRONMENT_NAME: ${{ vars.EB_ENVIRONMENT_NAME }}
+      EB_S3_BUCKET: ${{ vars.EB_S3_BUCKET }}
+      VERSION_LABEL: ${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate AWS configuration
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          : "${AWS_REGION:?Missing repository variable AWS_REGION}"
+          : "${EB_APPLICATION_NAME:?Missing repository variable EB_APPLICATION_NAME}"
+          : "${EB_ENVIRONMENT_NAME:?Missing repository variable EB_ENVIRONMENT_NAME}"
+          : "${EB_S3_BUCKET:?Missing repository variable EB_S3_BUCKET}"
+          : "${AWS_ACCESS_KEY_ID:?Missing repository secret AWS_ACCESS_KEY_ID}"
+          : "${AWS_SECRET_ACCESS_KEY:?Missing repository secret AWS_SECRET_ACCESS_KEY}"
+      - name: Authenticate to AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Build Docker source bundle
+        run: |
+          git archive --format=zip --output=bundle.zip HEAD:frontend \
+            Dockerfile .dockerignore nginx.conf package.json package-lock.json \
+            index.html tsconfig.json tsconfig.app.json tsconfig.node.json \
+            vite.config.ts src
+      - name: Upload source bundle
+        run: |
+          aws s3 cp bundle.zip \
+            "s3://$EB_S3_BUCKET/dco-frontend/$VERSION_LABEL.zip"
+      - name: Create application version
+        run: |
+          aws elasticbeanstalk create-application-version \
+            --application-name "$EB_APPLICATION_NAME" \
+            --version-label "$VERSION_LABEL" \
+            --source-bundle "S3Bucket=$EB_S3_BUCKET,S3Key=dco-frontend/$VERSION_LABEL.zip"
+      - name: Deploy application version
+        run: |
+          aws elasticbeanstalk update-environment \
+            --application-name "$EB_APPLICATION_NAME" \
+            --environment-name "$EB_ENVIRONMENT_NAME" \
+            --version-label "$VERSION_LABEL"
+      - name: Wait for deployment and verify version
+        run: |
+          aws elasticbeanstalk wait environment-updated \
+            --application-name "$EB_APPLICATION_NAME" \
+            --environment-names "$EB_ENVIRONMENT_NAME"
+          deployed_version=$(aws elasticbeanstalk describe-environments \
+            --application-name "$EB_APPLICATION_NAME" \
+            --environment-names "$EB_ENVIRONMENT_NAME" \
+            --query 'Environments[0].VersionLabel' --output text)
+          if [ "$deployed_version" != "$VERSION_LABEL" ]; then
+            echo "::error::Deployment did not activate the requested application version"
+            exit 1
+          fi
+          health=$(aws elasticbeanstalk describe-environments \
+            --application-name "$EB_APPLICATION_NAME" \
+            --environment-names "$EB_ENVIRONMENT_NAME" \
+            --query 'Environments[0].Health' --output text)
+          if [ "$health" != "Green" ]; then
+            echo "::error::Environment health is $health, not Green"
+            exit 1
+          fi
+          cname=$(aws elasticbeanstalk describe-environments \
+            --application-name "$EB_APPLICATION_NAME" \
+            --environment-names "$EB_ENVIRONMENT_NAME" \
+            --query 'Environments[0].CNAME' --output text)
+          printf '### Deployed frontend\nVersion: `%s`\nEnvironment: `%s`\nEndpoint: `%s`\n' \
+            "$VERSION_LABEL" "$EB_ENVIRONMENT_NAME" "$cname" >> "$GITHUB_STEP_SUMMARY"

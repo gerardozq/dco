@@ -1,8 +1,7 @@
 # DCO React starter
 
-A sample React + TypeScript frontend built with Vite. Includes an interactive
-launch checklist, a production Docker image served by Nginx, and GitHub Actions
-publishing to GitHub Container Registry (GHCR).
+A sample React + TypeScript frontend built with Vite, packaged with Docker and
+deployed to AWS Elastic Beanstalk using GitHub Actions.
 
 ## Local development
 
@@ -14,9 +13,9 @@ npm ci
 npm run dev
 ```
 
-Open the URL printed by Vite. The checklist is demo-only, resets on reload, and
-does not query the registry. No backend or registry credentials are required to
-run the app.
+Open the URL printed by Vite. The interactive checklist is demo-only, resets on
+reload, and does not query deployment status. No AWS credentials are needed to
+run the app locally.
 
 ```sh
 npm run lint
@@ -37,54 +36,103 @@ docker run --rm -p 8080:80 dco-frontend
 Open http://localhost:8080. `/health` returns HTTP 200; frontend routes fall back
 to the app entry point. Hashed assets are cached; the entry point is not.
 
-## Publish to GHCR
+## Deploy to Elastic Beanstalk
 
-The [workflow](.github/workflows/publish-ghcr.yml) runs lint, tests, and a build on
-pull requests and pushes to `main`. After validation, pushes to `main` publish a
-Linux AMD64 image tagged with the full Git commit SHA. You can also run
-**Validate and publish frontend to GHCR** manually on `main` from the Actions tab.
-Pull requests do not log in to GHCR or publish images.
+The [workflow](.github/workflows/deploy-beanstalk.yml) runs lint, tests, and a
+production build on pull requests and pushes to `main`. After validation,
+pushes to `main` deploy to an existing Beanstalk environment. You can also run
+**Validate and deploy frontend to Elastic Beanstalk** manually on `main`.
+Pull requests never receive AWS credentials or deploy.
 
-Publishing uses the automatic `GITHUB_TOKEN`, with `packages: write` permission
-only in the publish job. No personal access token, AWS credentials, or repository
-variables are required. AWS secrets and variables from the previous ECR setup
-are no longer used and can be removed if no other workflows need them. Revoke
-unused AWS access keys in IAM as well.
+GHCR publishing has been removed. The workflow archives the tracked frontend
+source and configuration, placing the Dockerfile at the ZIP root, uploads the
+bundle to S3, creates a unique application version, and updates the environment.
+Beanstalk builds the image itself; no container registry is needed. Local
+environment files, dependencies, and build output are not included in the bundle.
+Deployments are serialized without cancelling an in-progress deployment.
+The workflow waits for the environment update and checks that the requested
+version is active and the environment health is Green before reporting success.
 
-The image name is `ghcr.io/<owner>/<repository>-frontend`, normalized to lowercase.
-For this repository, the workflow run summary will show:
+### 1. Prepare AWS infrastructure
 
-```text
-ghcr.io/gerardozq/dco-frontend:COMMIT_SHA
-```
+Create the following in the same AWS region and account:
 
-The image includes a source label linking it to this GitHub repository. If a
-package with that name already exists, ensure this repository has write access
-under the package's **Settings > Manage Actions access**. Organization policies
-must also allow package creation and publishing.
+- An Elastic Beanstalk application, for example `dco`.
+- A **web server environment** using the **Docker running on 64bit Amazon Linux
+  2023** platform (single-container Docker, not the ECS-managed Docker platform),
+  for example `dco-production`.
+- A private S3 bucket for deployment bundles, for example `YOUR-UNIQUE-EB-BUCKET`.
 
-### Pull and run a published image
+Configure the environment's Beanstalk service role and EC2 instance profile
+using AWS's recommended Beanstalk roles. The instance profile must be allowed
+to read `dco-frontend/*` objects from the deployment bucket. If the bucket uses
+a customer-managed KMS key, grant the required encrypt/decrypt permissions to
+the deployment identity and decrypt permissions to the instance profile.
+Allow outbound access to npm and Docker Hub so instances can build the image.
+For load-balanced environments, configure the health-check path as `/health`.
+The container exposes port 80; Beanstalk's reverse proxy forwards traffic to it.
 
-New GHCR packages are private by default, even for public source repositories.
-To allow anonymous pulls, change the package visibility to public in its GitHub
-package settings. Otherwise, authenticate locally with a GitHub personal access
-token (classic) with `read:packages` and an account authorized to read the package:
+Configure HTTPS with an ACM certificate and a load balancer for production.
+Infrastructure provisioning, domain names, and certificates are not managed by
+this workflow. Beanstalk resources incur AWS charges.
 
-```sh
-printf '%s' "$GHCR_TOKEN" | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
-```
+### 2. Configure the deployment identity
 
-Set `GHCR_TOKEN` securely in your local environment; do not commit or share it.
-If required by your organization, authorize the token for SSO. This token is
-only for local pulls; the workflow does not need it.
+Use a dedicated IAM user, not root-account access keys. Grant:
 
-Replace `COMMIT_SHA` with the full SHA shown in the workflow summary:
+- `s3:PutObject` on `arn:aws:s3:::YOUR-UNIQUE-EB-BUCKET/dco-frontend/*`.
+- `elasticbeanstalk:CreateApplicationVersion` on your application's application
+  and application-version resources.
+- `elasticbeanstalk:UpdateEnvironment` on your application's environment and
+  application-version resources.
+- `elasticbeanstalk:DescribeEnvironments` (this read operation requires `Resource: "*"`).
 
-```sh
-docker pull ghcr.io/gerardozq/dco-frontend:COMMIT_SHA
-docker run --rm -p 8080:80 ghcr.io/gerardozq/dco-frontend:COMMIT_SHA
-```
+Scope write permissions to the target region, account, application, and
+environment. Beanstalk may require additional dependent permissions according
+to your environment and service-role configuration; inspect AWS AccessDenied
+errors rather than granting administrator access. The deployment user does not
+need ECR permissions or permission to create the application or environment.
 
-Publishing to GHCR stores the image; it does **not** deploy or host the web app.
-If publishing returns a permission error, inspect the package's Actions access
-and repository/organization policies.
+Create an IAM access key. Store it only in GitHub Actions secrets; never commit
+it, include it in frontend code, or share it in chat. Rotate keys regularly.
+OIDC is preferable for avoiding long-lived keys, but this workflow uses access
+keys as requested.
+
+### 3. Configure GitHub Actions
+
+Under **Settings > Secrets and variables > Actions > Secrets**, create:
+
+| Secret | Value |
+| --- | --- |
+| `AWS_ACCESS_KEY_ID` | The deployment IAM user's access key ID |
+| `AWS_SECRET_ACCESS_KEY` | The corresponding secret access key |
+| `AWS_SESSION_TOKEN` | Only required for temporary credentials |
+
+Temporary credentials must come from the same session and be refreshed before
+expiry. Leave `AWS_SESSION_TOKEN` unset for IAM user access keys.
+
+Under **Settings > Secrets and variables > Actions > Variables**, create:
+
+| Variable | Example |
+| --- | --- |
+| `AWS_REGION` | `ap-southeast-1` |
+| `EB_APPLICATION_NAME` | `dco` |
+| `EB_ENVIRONMENT_NAME` | `dco-production` |
+| `EB_S3_BUCKET` | `YOUR-UNIQUE-EB-BUCKET` |
+
+The old `ECR_REPOSITORY` and `AWS_ROLE_ARN` variables are not used.
+Push to `main` or manually run the workflow after configuring AWS. The run
+summary reports the application version, environment, and endpoint hostname.
+
+### Operations and troubleshooting
+
+Missing configuration fails explicitly before deployment. For authentication
+failures, check that the keys are active and any temporary credentials have not
+expired. For deployment failures, inspect Beanstalk events and instance logs;
+the Docker build runs on the environment, not on the Actions runner.
+
+The AWS CLI waiter has a finite timeout. If it times out, the workflow fails,
+but the AWS deployment may still be running. Inspect the environment before
+retrying. To roll back, deploy a previous application version from Beanstalk.
+Set retention policies for old application versions and their S3 bundles;
+this workflow does not delete them.
