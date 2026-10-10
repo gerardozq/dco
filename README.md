@@ -1,7 +1,8 @@
-# DCO React starter
+# CateLink frontend
 
-A sample React + TypeScript frontend built with Vite, packaged with Docker and
-deployed to AWS Elastic Beanstalk using GitHub Actions.
+A React + TypeScript frontend for CateLink, a catechist mentoring app. It is
+built with Vite, packaged with Docker, and deployed to AWS Elastic Beanstalk
+using GitHub Actions.
 
 ## Local development
 
@@ -13,9 +14,13 @@ npm ci
 npm run dev
 ```
 
-Open the URL printed by Vite. The interactive checklist is demo-only, resets on
-reload, and does not query deployment status. No AWS credentials are needed to
-run the app locally.
+Open the URL printed by Vite. The welcome, profile, discovery, request, chat,
+scheduling, pre-session prompt, mentor inbox, resource suggestions, video call,
+session summary, and external-meeting check are interactive previews. Discovery
+and resources use local example data. Sign-in, account persistence, live mentor
+accounts, and real message, request, calendar, or call-provider connections are
+not implemented. Call notes and summaries are entered by the user; there is no
+recording or transcription. No AWS credentials are needed to run the app locally.
 
 ```sh
 npm run lint
