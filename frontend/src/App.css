@@ -1,0 +1,34 @@
+.shell { max-width: 1120px; margin: auto; padding: 0 32px; }
+.topbar { display: flex; align-items: center; justify-content: space-between; padding: 28px 0; border-bottom: 1px solid #dce4e3; }
+.brand { display: flex; align-items: center; gap: 12px; color: #18332f; font-weight: 800; text-decoration: none; letter-spacing: 2px; }
+.brand-mark { display: grid; place-items: center; width: 38px; height: 38px; background: #18332f; color: white; border-radius: 12px; letter-spacing: -2px; font-size: 26px; }
+.badge { font-size: 12px; font-weight: 600; background: #e7efeb; padding: 8px 14px; border-radius: 20px; }
+.hero { padding: 84px 0 64px; max-width: 760px; }
+.eyebrow, .card-number { font-size: 11px; font-weight: 700; letter-spacing: 2px; color: #48766a; }
+.hero h1 { font-size: clamp(42px, 7vw, 76px); line-height: 1.08; letter-spacing: -3px; margin: 22px 0; }
+.hero h1 span { color: #477d69; }
+.intro { max-width: 560px; font-size: 18px; line-height: 1.7; color: #536763; }
+.primary-link { display: inline-block; margin-top: 28px; padding: 16px 22px; border-radius: 10px; background: #18332f; color: white; text-decoration: none; font-weight: 600; }
+.primary-link:hover { background: #2b5148; }
+.features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.card { background: #fff; border: 1px solid #dce4e3; border-radius: 16px; padding: 28px; }
+.card h2 { margin: 26px 0 12px; font-size: 21px; }
+.card p, .checklist p { color: #536763; line-height: 1.7; }
+.checklist { display: grid; grid-template-columns: 1fr 1.2fr; gap: 48px; margin: 48px 0; background: #e8efeb; border-radius: 18px; padding: 36px; scroll-margin-top: 24px; }
+.checklist h2 { font-size: 28px; margin: 14px 0; letter-spacing: -0.7px; }
+.checklist .eyebrow { color: #48766a; }
+.checklist .progress-label { margin-top: 20px; font-weight: 700; color: #18332f; font-size: 13px; }
+progress { width: 100%; height: 8px; accent-color: #477d69; margin-top: 8px; }
+.checklist ul { list-style: none; padding: 0; margin: 0; align-self: center; }
+.task { display: flex; align-items: center; gap: 14px; padding: 16px 0; cursor: pointer; }
+.checklist li + li { border-top: 1px solid #cfdbd4; }
+.task input { width: 19px; height: 19px; accent-color: #477d69; flex-shrink: 0; cursor: pointer; }
+.complete span { color: #536763; text-decoration: line-through; }
+footer { border-top: 1px solid #dce4e3; padding: 24px 0 32px; font-size: 12px; color: #536763; }
+@media (max-width: 720px) {
+  .shell { padding: 0 20px; }
+  .hero { padding: 52px 0 40px; }
+  .hero h1 { letter-spacing: -1.8px; }
+  .features, .checklist { grid-template-columns: 1fr; }
+  .checklist { padding: 24px; gap: 20px; margin: 28px 0; }
+}
