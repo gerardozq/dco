@@ -2341,6 +2341,29 @@ function App() {
             >
               Preview mentor inbox
             </button>
+            <button
+              className="text-button"
+              onClick={() => {
+                setRequestStage(null)
+                setJourneyView('profile')
+                setShowProfile(false)
+              }}
+              type="button"
+            >
+              Return to welcome
+            </button>
+            <button
+              className="text-button"
+              onClick={() => {
+                setShowProfile(false)
+                setSelectedMentorId(null)
+                setRequestStage(null)
+                setJourneyView('match')
+              }}
+              type="button"
+            >
+              Return to welcome
+            </button>
           </section>
         </main>
       )

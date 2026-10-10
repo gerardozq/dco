@@ -142,8 +142,8 @@ test('previews a request, a kind decline, and alternative mentor selection', asy
 
   await user.click(screen.getByRole('button', { name: 'Mentor declines' }))
   expect(screen.getByRole('heading', { name: 'Ben cannot take a new mentee right now' })).toBeDefined()
-  await user.click(screen.getByRole('button', { name: /Mary Lourdes Goh/ }))
-  expect(screen.getByRole('dialog', { name: 'Mary Lourdes Goh' })).toBeDefined()
+  await user.click(screen.getByRole('button', { name: /Michelle Goh/ }))
+  expect(screen.getByRole('dialog', { name: 'Michelle Goh' })).toBeDefined()
 })
 
 test('previews an accepted mentor request as a match', async () => {
