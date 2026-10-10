@@ -2556,8 +2556,6 @@ function App() {
                 <p className="mentor-location">{selectedMentor.parish} · {selectedMentor.area}</p>
                 <p className="mentor-bio">{selectedMentor.bio}</p>
                 <p>Teaches {selectedMentor.groups.join(', ')} like you</p>
-                {selectedMentor.availability.some((slot) => profile.availability.includes(slot)) && (
-                  )}
                 <div className="fit-summary">
                   <div className="fit-label"><span>Match score · demo</span><strong>{getMentorFit(selectedMentor, profile)}%</strong></div>
                   <div
