@@ -1100,12 +1100,18 @@ function FishMark() {
   return (
     <svg
       className="fish-mark"
-      viewBox="0 0 200 120"
+      viewBox="68 -2 138 82"
       role="img"
       aria-label="CateLink fish mark"
     >
-      <path className="fish-mark-gold" d="M18 60C48 12 118 12 148 60L184 98" />
-      <path className="fish-mark-green" d="M18 60C48 108 118 108 148 60L184 22" />
+      <path
+        className="fish-mark-gold"
+        d="M180.2,75.93c1.69-35.61-30.86-63.18-65.8-57.44-12.07,1.85-23.5,7.7-32.2,16.28-1.03.94-2.26,2.36-3.21,3.37,0,0-7.21-5.78-7.21-5.78.67-.81,1.86-2.41,2.5-3.16,5.8-6.9,12.96-12.73,20.92-16.98,14.66-7.81,32.05-10.2,48.31-6.8,7.8,1.62,15.36,4.58,22.23,8.62,21.65,12.67,35.82,36.76,36.47,61.89,0,0-22.01,0-22.01,0h0Z"
+      />
+      <path
+        className="fish-mark-blue"
+        d="M202.21,0c-1.08,39.66-34.21,72.5-73.93,72.01-14.21-.03-28.36-4.48-40.05-12.55-5.53-3.87-10.57-8.51-14.79-13.78,0,0-1.66-2.11-1.66-2.11,0,0,7.21-5.78,7.21-5.78.63.66,1.77,1.95,2.38,2.56,4.59,4.64,9.96,8.58,15.77,11.54,13.1,6.62,28.69,8.1,42.76,3.93,18.58-5.36,33.68-20.64,38.52-39.18,1.45-5.45,2.02-11.07,1.78-16.64h22.01Z"
+      />
     </svg>
   )
 }
@@ -1158,8 +1164,22 @@ function App() {
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    if (email.trim().toLowerCase() === 'benlim.sg@hotmail.com') { setIsAdmin(true); setAdminTab('Overview'); setNotice(''); return }
-    setNotice('Sign-in is not connected yet. Email links will be added in a later step.')
+    if (email.trim().toLowerCase() === 'benlim.sg@hotmail.com') {
+      setIsAdmin(true)
+      setAdminTab('Overview')
+      setNotice('')
+      return
+    }
+
+    // The sign-in action opens the existing local profile preview for non-admin emails.
+    setNotice('')
+    setShowProfile(true)
+    setStep(1)
+    setComplete(false)
+    setFilters(INITIAL_FILTERS)
+    setSelectedMentorId(null)
+    setRequestStage(null)
+    setError('')
   }
 
   function updateProfile<Key extends keyof Profile>(key: Key, value: Profile[Key]) {
@@ -1182,16 +1202,6 @@ function App() {
       return
     }
     updateProfile(key, [...selected, value])
-  }
-
-  function goToProfile() {
-    setShowProfile(true)
-    setStep(1)
-    setComplete(false)
-    setFilters(INITIAL_FILTERS)
-    setSelectedMentorId(null)
-    setRequestStage(null)
-    setError('')
   }
 
   function goBack() {
@@ -1468,12 +1478,11 @@ function App() {
     return (
       <main className="welcome-page">
         <section className="welcome-card" aria-labelledby="welcome-title">
-          <div className="brand-mark brand-mark-animated" aria-hidden="true">
+          <div className="brand-mark" aria-hidden="true">
             <FishMark />
           </div>
 
           <div className="brand-copy">
-            <p className="eyebrow">Catechist mentoring</p>
             <h1 id="welcome-title">CateLink</h1>
           </div>
 
@@ -1492,7 +1501,7 @@ function App() {
                 setEmail(event.target.value)
                 setNotice('')
               }}
-              placeholder="you@example.com"
+              placeholder="gerald.lim@example.com"
               required
               type="email"
               value={email}
@@ -1504,14 +1513,8 @@ function App() {
 
           <p className="sign-in-note">No password to remember. We email a link that signs you in.</p>
           <p className="form-notice" role="status" aria-live="polite">{notice}</p>
-          <button className="text-button" onClick={goToProfile} type="button">
-            Preview profile setup
-          </button>
         </section>
 
-        <footer className="welcome-footer">
-          A community of catechists, walking together.
-        </footer>
       </main>
     )
   }
