@@ -36,10 +36,10 @@ jobs:
       group: elastic-beanstalk-main
       cancel-in-progress: false
     env:
-      AWS_REGION: ${{ vars.AWS_REGION }}
-      EB_APPLICATION_NAME: ${{ vars.EB_APPLICATION_NAME }}
-      EB_ENVIRONMENT_NAME: ${{ vars.EB_ENVIRONMENT_NAME }}
-      EB_S3_BUCKET: ${{ vars.EB_S3_BUCKET }}
+      AWS_REGION: ap-southeast-1
+      EB_APPLICATION_NAME: dco-app
+      EB_ENVIRONMENT_NAME: Dco-app-env
+      EB_S3_BUCKET: dco-app
       VERSION_LABEL: ${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
     steps:
       - uses: actions/checkout@v4
@@ -48,10 +48,10 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          : "${AWS_REGION:?Missing repository variable AWS_REGION}"
-          : "${EB_APPLICATION_NAME:?Missing repository variable EB_APPLICATION_NAME}"
-          : "${EB_ENVIRONMENT_NAME:?Missing repository variable EB_ENVIRONMENT_NAME}"
-          : "${EB_S3_BUCKET:?Missing repository variable EB_S3_BUCKET}"
+          : "${AWS_REGION:?Missing workflow setting AWS_REGION}"
+          : "${EB_APPLICATION_NAME:?Missing workflow setting EB_APPLICATION_NAME}"
+          : "${EB_ENVIRONMENT_NAME:?Missing workflow setting EB_ENVIRONMENT_NAME}"
+          : "${EB_S3_BUCKET:?Missing workflow setting EB_S3_BUCKET}"
           : "${AWS_ACCESS_KEY_ID:?Missing repository secret AWS_ACCESS_KEY_ID}"
           : "${AWS_SECRET_ACCESS_KEY:?Missing repository secret AWS_SECRET_ACCESS_KEY}"
       - name: Authenticate to AWS

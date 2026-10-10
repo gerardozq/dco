@@ -111,14 +111,20 @@ Under **Settings > Secrets and variables > Actions > Secrets**, create:
 Temporary credentials must come from the same session and be refreshed before
 expiry. Leave `AWS_SESSION_TOKEN` unset for IAM user access keys.
 
-Under **Settings > Secrets and variables > Actions > Variables**, create:
+The deployment target is configured directly in the workflow:
 
-| Variable | Example |
+| Workflow setting | Value |
 | --- | --- |
 | `AWS_REGION` | `ap-southeast-1` |
-| `EB_APPLICATION_NAME` | `dco` |
-| `EB_ENVIRONMENT_NAME` | `dco-production` |
-| `EB_S3_BUCKET` | `YOUR-UNIQUE-EB-BUCKET` |
+| `EB_APPLICATION_NAME` | `dco-app` |
+| `EB_ENVIRONMENT_NAME` | `Dco-app-env` |
+| `EB_S3_BUCKET` | `dco-app` |
+
+These names are case-sensitive. Edit the workflow to deploy to a different target.
+
+No GitHub repository variables are required. Confirm the `dco-app` bucket is in
+`ap-southeast-1` and grant the deployment user write access and the environment's
+instance profile read access to `arn:aws:s3:::dco-app/dco-frontend/*`.
 
 The old `ECR_REPOSITORY` and `AWS_ROLE_ARN` variables are not used.
 Push to `main` or manually run the workflow after configuring AWS. The run
