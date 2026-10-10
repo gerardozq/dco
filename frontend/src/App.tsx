@@ -2334,6 +2334,7 @@ function App() {
             <button className="text-button" onClick={() => setRequestStage(null)} type="button">
               Back to mentors
             </button>
+            <br />
             <button
               className="text-button"
               onClick={() => setJourneyView('inbox')}
@@ -2341,16 +2342,7 @@ function App() {
             >
               Preview mentor inbox
             </button>
-            <button
-              className="text-button"
-              onClick={() => {
-                setRequestStage(null)
-                setShowProfile(false)
-              }}
-              type="button"
-            >
-              Return to welcome
-            </button>
+            <br />
             <button
               className="text-button"
               onClick={() => {
@@ -2410,6 +2402,7 @@ function App() {
               <button className="primary-button" onClick={() => setRequestStage(null)} type="button">
                 Back to mentors
               </button>
+              <br />
               <button className="secondary-button" onClick={() => setShowProfile(false)} type="button">
                 Return to welcome
               </button>
