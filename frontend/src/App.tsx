@@ -216,7 +216,7 @@ const MENTORS: Mentor[] = [
     fit: 68,
     tone: 4,
     bio: 'Supports catechists teaching children with special needs.',
-  },,
+  },
   {
     id: 'demo-chinese-01',
     name: 'Aaron Lim',
