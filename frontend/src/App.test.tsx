@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { cleanup, render, screen } from '@testing-library/react'
+import { cleanup, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, expect, test } from 'vitest'
 import App from './App'
@@ -109,7 +109,7 @@ test('filters demo mentors, explains fit, and handles an empty result', async ()
   await user.click(screen.getByRole('button', { name: /Ben Tan, .* demo fit/ }))
   expect(screen.getByRole('dialog', { name: 'Ben Tan' })).toBeDefined()
   expect(screen.getByText('Teaches Primary like you')).toBeDefined()
-  expect(screen.getByText('Free weekend morning')).toBeDefined()
+  expect(within(screen.getByRole('dialog', { name: 'Ben Tan' })).getByText('Free weekend morning')).toBeDefined()
 })
 
 
