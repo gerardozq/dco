@@ -1,80 +1,33 @@
+/* CateLink prototype visual system */
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap');
+
 :root {
   color-scheme: light;
-  font-family: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-family: 'Schibsted Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  --bg: #e7e4da;
-  --panel: #f1eee5;
-  --surface: #fbf9f4;
-  --ink: #1b2822;
-  --muted: #566660;
-  --line: #d5d0c2;
-  --primary: #234a3a;
-  --on-primary: #f6f2ea;
-  --gold: #8a6209;
-  --gold-fill: #f2b31f;
-  --soft: #dde9e1;
-  --danger: #9b3a2a;
-
-  background: var(--bg);
+  --ink: #111214;
+  --muted: #5f5d68;
+  --line: rgba(17,18,20,.10);
+  --primary: #111214;
+  --on-primary: #fff;
+  --gold: #7a5a00;
+  --gold-fill: #fbea5b;
+  --soft: rgba(255,255,255,.55);
+  --panel: rgba(255,255,255,.52);
+  --surface: rgba(255,255,255,.68);
+  --danger: #b23a28;
+  --bg: #faf7f4;
+  --mesh: radial-gradient(80% 60% at 10% 18%, #bce2f5 0, transparent 72%), radial-gradient(80% 60% at 90% 86%, #fbe08a 0, transparent 72%), #faf7f4;
+  background: var(--mesh);
+  background-attachment: fixed;
   color: var(--ink);
 }
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-    --bg: #0d1511;
-    --panel: #16221b;
-    --surface: #1b2a21;
-    --ink: #ece7db;
-    --muted: #a5b4ab;
-    --line: #2b3d33;
-    --primary: #8ccba8;
-    --on-primary: #0e1612;
-    --gold: #f2b31f;
-    --gold-fill: #f2b31f;
-    --soft: #243a2e;
-    --danger: #e58c79;
-  }
-}
-
-* {
-  box-sizing: border-box;
-}
-
-html {
-  min-width: 320px;
-  min-height: 100%;
-}
-
-body {
-  min-width: 320px;
-  min-height: 100svh;
-  margin: 0;
-  background: var(--bg);
-  color: var(--ink);
-  font-size: 14px;
-  line-height: 1.5;
-}
-
-button,
-input {
-  font: inherit;
-}
-
-button {
-  color: inherit;
-}
-
-:focus-visible {
-  outline: 3px solid var(--gold-fill);
-  outline-offset: 3px;
-}
-
-::selection {
-  background: var(--primary);
-  color: var(--on-primary);
-}
+* { box-sizing: border-box; }
+html { min-width: 320px; min-height: 100%; scroll-padding-top: env(safe-area-inset-top, 0px); }
+body { min-width: 320px; min-height: 100svh; margin: 0; background: var(--mesh); background-attachment: fixed; color: var(--ink); font-size: 14px; line-height: 1.5; }
+button, input, select, textarea { font: inherit; }
+button { color: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid #111214; outline-offset: 3px; }
+::selection { background: #111214; color: #fff; }
