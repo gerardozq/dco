@@ -2345,7 +2345,6 @@ function App() {
               className="text-button"
               onClick={() => {
                 setRequestStage(null)
-                setJourneyView('profile')
                 setShowProfile(false)
               }}
               type="button"
