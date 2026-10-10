@@ -19,7 +19,7 @@ async function finishProfile(user: ReturnType<typeof userEvent.setup>) {
 
 async function matchWithBen(user: ReturnType<typeof userEvent.setup>) {
   await finishProfile(user)
-  await user.click(screen.getByRole('button', { name: 'Ben Tan, 96% demo fit' }))
+  await user.click(screen.getByRole('button', { name: /Ben Tan, .* demo fit/ }))
   await user.click(screen.getByRole('button', { name: 'Send request' }))
   await user.click(screen.getByRole('button', { name: 'Preview sending request' }))
   await user.click(screen.getByRole('button', { name: 'Mentor accepts' }))
@@ -100,16 +100,36 @@ test('filters demo mentors, explains fit, and handles an empty result', async ()
   await finishProfile(user)
 
   expect(screen.getByRole('status').textContent).toBe('7 mentors fit you')
-  await user.selectOptions(screen.getByRole('combobox', { name: 'Filter by parish' }), 'Nativity of the BVM')
+  await user.selectOptions(screen.getByRole('combobox', { name: 'Filter by parish' }), 'Church of the Nativity of the Blessed Virgin Mary')
   await user.selectOptions(screen.getByRole('combobox', { name: 'Filter by time' }), 'Weekday morning')
   expect(screen.getByRole('status').textContent).toBe('No mentor fits all filters')
   expect(screen.getByText('Try clearing a filter to see other mentors.')).toBeDefined()
 
   await user.click(screen.getByRole('button', { name: 'Clear filters' }))
-  await user.click(screen.getByRole('button', { name: 'Ben Tan, 96% demo fit' }))
+  await user.click(screen.getByRole('button', { name: /Ben Tan, .* demo fit/ }))
   expect(screen.getByRole('dialog', { name: 'Ben Tan' })).toBeDefined()
   expect(screen.getByText('Teaches Primary like you')).toBeDefined()
   expect(screen.getByText('Free weekend morning')).toBeDefined()
+})
+
+
+test('learning goals are included in mentor match explanations', async () => {
+  const user = userEvent.setup()
+  render(<App />)
+
+  await user.click(screen.getByRole('button', { name: 'Preview profile setup' }))
+  await user.type(screen.getByRole('textbox', { name: 'Full name' }), 'Gerald Lim')
+  await user.click(screen.getByRole('button', { name: 'Next' }))
+  await user.click(screen.getByRole('button', { name: 'Primary' }))
+  await user.click(screen.getByRole('button', { name: 'Storytelling' }))
+  await user.click(screen.getByRole('button', { name: 'Classroom management' }))
+  await user.click(screen.getByRole('button', { name: 'Next' }))
+  await user.click(screen.getByRole('button', { name: 'Weekend morning, not selected' }))
+  await user.click(screen.getByRole('button', { name: 'Find my mentor' }))
+
+  await user.click(screen.getByRole('button', { name: /Ben Tan, .* demo fit/ }))
+  expect(screen.getByText(/Can help with Classroom management/)).toBeDefined()
+  expect(screen.getByText('Expertise')).toBeDefined()
 })
 
 test('previews a request, a kind decline, and alternative mentor selection', async () => {
@@ -117,7 +137,7 @@ test('previews a request, a kind decline, and alternative mentor selection', asy
   render(<App />)
   await finishProfile(user)
 
-  await user.click(screen.getByRole('button', { name: 'Ben Tan, 96% demo fit' }))
+  await user.click(screen.getByRole('button', { name: /Ben Tan, .* demo fit/ }))
   await user.click(screen.getByRole('button', { name: 'Send request' }))
   expect(screen.getByRole('dialog', { name: 'Send a request to Ben?' })).toBeDefined()
   const note = screen.getByRole('textbox', { name: 'A short note (optional)' })
@@ -138,7 +158,7 @@ test('previews an accepted mentor request as a match', async () => {
   render(<App />)
   await finishProfile(user)
 
-  await user.click(screen.getByRole('button', { name: 'Ben Tan, 96% demo fit' }))
+  await user.click(screen.getByRole('button', { name: /Ben Tan, .* demo fit/ }))
   await user.click(screen.getByRole('button', { name: 'Send request' }))
   await user.click(screen.getByRole('button', { name: 'Preview sending request' }))
   await user.click(screen.getByRole('button', { name: 'Mentor accepts' }))
@@ -196,7 +216,7 @@ test('shows when no sample meeting times overlap', async () => {
   const user = userEvent.setup()
   render(<App />)
   await finishProfile(user)
-  await user.click(screen.getByRole('button', { name: 'Joseph Tay, 68% demo fit' }))
+  await user.click(screen.getByRole('button', { name: /Joseph Tay, .* demo fit/ }))
   await user.click(screen.getByRole('button', { name: 'Send request' }))
   await user.click(screen.getByRole('button', { name: 'Preview sending request' }))
   await user.click(screen.getByRole('button', { name: 'Mentor accepts' }))
@@ -304,4 +324,24 @@ test('offers a private external-meeting check and a next-session action', async 
   expect(screen.getByRole('heading', { name: 'Lovely to hear it' })).toBeDefined()
   await user.click(screen.getByRole('button', { name: 'Choose a next session' }))
   expect(screen.getByRole('dialog', { name: 'When works for both of you?' })).toBeDefined()
+})
+
+
+test('admin email changes the sign-in action and opens the admin dashboard', async () => {
+  const user = userEvent.setup()
+  render(<App />)
+
+  const email = screen.getByRole('textbox', { name: 'Email' })
+  await user.type(email, 'benlim.sg@hotmail.com')
+  expect(screen.getByRole('button', { name: 'Login as Admin' })).toBeDefined()
+  await user.click(screen.getByRole('button', { name: 'Login as Admin' }))
+
+  expect(screen.getByRole('heading', { name: 'Overview' })).toBeDefined()
+  expect(screen.getByRole('navigation', { name: 'Admin navigation' })).toBeDefined()
+  await user.click(screen.getByRole('button', { name: 'Users' }))
+  expect(screen.getByRole('heading', { name: 'Users' })).toBeDefined()
+  expect(screen.getByRole('table')).toBeDefined()
+  await user.click(screen.getByRole('button', { name: 'Meetups' }))
+  expect(screen.getByRole('heading', { name: 'Meetups' })).toBeDefined()
+  expect(screen.getByText('MEETUP CHECK-IN')).toBeDefined()
 })

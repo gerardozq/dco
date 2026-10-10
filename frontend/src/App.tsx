@@ -1,9 +1,43 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import './App.css'
 
-const PARISHES = ['St Ignatius', 'Holy Family', 'Nativity of the BVM']
+const PARISHES = [
+  'Cathedral of the Good Shepherd',
+  'Church of St Joseph (Victoria Street)',
+  'Church of Saints Peter and Paul',
+  'Church of Our Lady of Lourdes',
+  'Church of the Sacred Heart',
+  'Church of St Teresa',
+  'Church of St Alphonsus (Novena Church)',
+  'Church of St Bernadette',
+  'Church of St Michael the Archangel',
+  'Church of the Holy Family',
+  'Church of Our Lady Queen of Peace',
+  'Church of St Stephen',
+  'Church of Our Lady of Perpetual Succour',
+  'Church of the Holy Trinity',
+  'Church of Divine Mercy',
+  'Church of St Ignatius',
+  'Church of the Blessed Sacrament',
+  'Church of St Mary of the Angels',
+  'Church of St Francis of Assisi',
+  'Church of the Holy Cross',
+  'Church of St Joseph (Bukit Timah)',
+  'Church of the Risen Christ',
+  'Church of St Anthony',
+  'Church of the Holy Spirit',
+  'Church of Our Lady Star of the Sea',
+  'Church of Christ the King',
+  'Church of the Nativity of the Blessed Virgin Mary',
+  'Church of the Immaculate Heart of Mary',
+  'Church of St Francis Xavier',
+  "St Anne's Church",
+  'Church of St Vincent de Paul',
+  'Church of the Transfiguration',
+]
 const TEACHING_GROUPS = ['RCIA', 'Youth', 'Primary', 'Secondary', 'Special needs']
 const TEACHING_STYLES = ['Storytelling', 'Discussion-led', 'Activity-based', 'Prayer-centred', 'Structured']
+const LEARNING_NEEDS = ['Classroom management', 'Engaging students', 'Lesson delivery', 'Lesson planning', 'Praying with children', 'Supporting different learning needs', 'Talking with parents', 'Staying motivated']
 const DAYS = ['Weekday', 'Weekend']
 const TIMES = ['Morning', 'Afternoon', 'Evening']
 const MEETING_SLOTS = [
@@ -69,8 +103,10 @@ type Mentor = {
   groups: string[]
   years: number
   styles: string[]
+  expertise: string[]
   availability: string[]
   fit: number
+  meetingModes: string[]
   tone: number
   bio: string
 }
@@ -79,11 +115,13 @@ const MENTORS: Mentor[] = [
   {
     id: 'ben',
     name: 'Ben Tan',
-    parish: 'St Ignatius',
+    parish: 'Church of St Ignatius',
     area: 'Central',
     groups: ['Primary'],
     years: 14,
     styles: ['Storytelling', 'Prayer-centred'],
+    expertise: ['Classroom management', 'Lesson delivery', 'Praying with children', 'Staying motivated'],
+    meetingModes: ['Video', 'In person'],
     availability: ['Weekend morning', 'Weekday evening'],
     fit: 96,
     tone: 0,
@@ -92,11 +130,13 @@ const MENTORS: Mentor[] = [
   {
     id: 'daniel',
     name: 'Daniel Rozario',
-    parish: 'Holy Family',
+    parish: 'Church of the Holy Family',
     area: 'East',
     groups: ['Youth', 'Secondary'],
     years: 9,
     styles: ['Discussion-led'],
+    expertise: ['Engaging students', 'Lesson delivery', 'Talking with parents'],
+    meetingModes: ['Video', 'Either'],
     availability: ['Weekday evening', 'Weekend afternoon'],
     fit: 78,
     tone: 1,
@@ -110,6 +150,8 @@ const MENTORS: Mentor[] = [
     groups: ['Primary'],
     years: 11,
     styles: ['Activity-based', 'Storytelling'],
+    expertise: ['Engaging students', 'Lesson planning', 'Lesson delivery'],
+    meetingModes: ['In person', 'Either'],
     availability: ['Weekend morning'],
     fit: 91,
     tone: 2,
@@ -123,6 +165,8 @@ const MENTORS: Mentor[] = [
     groups: ['Primary', 'Special needs'],
     years: 8,
     styles: ['Activity-based'],
+    expertise: ['Classroom management', 'Supporting different learning needs', 'Engaging students'],
+    meetingModes: ['Video', 'In person', 'Either'],
     availability: ['Weekend morning', 'Weekend afternoon'],
     fit: 88,
     tone: 4,
@@ -136,6 +180,8 @@ const MENTORS: Mentor[] = [
     groups: ['Primary'],
     years: 5,
     styles: ['Storytelling'],
+    expertise: ['Lesson delivery', 'Lesson planning', 'Praying with children'],
+    meetingModes: ['In person', 'Either'],
     availability: ['Weekend morning', 'Weekend afternoon'],
     fit: 85,
     tone: 1,
@@ -149,6 +195,8 @@ const MENTORS: Mentor[] = [
     groups: ['Primary'],
     years: 18,
     styles: ['Prayer-centred', 'Storytelling'],
+    expertise: ['Praying with children', 'Staying motivated', 'Lesson planning'],
+    meetingModes: ['Video', 'In person'],
     availability: ['Weekend morning', 'Weekday afternoon'],
     fit: 93,
     tone: 0,
@@ -157,15 +205,767 @@ const MENTORS: Mentor[] = [
   {
     id: 'joseph',
     name: 'Joseph Tay',
-    parish: 'Nativity of the BVM',
+    parish: 'Church of the Nativity of the Blessed Virgin Mary',
     area: 'West',
     groups: ['Special needs'],
     years: 10,
     styles: ['Activity-based'],
+    expertise: ['Supporting different learning needs', 'Classroom management', 'Engaging students'],
+    meetingModes: ['Video', 'Either'],
     availability: ['Weekend afternoon'],
     fit: 68,
     tone: 4,
     bio: 'Supports catechists teaching children with special needs.',
+  },,
+  {
+    id: 'demo-chinese-01',
+    name: 'Aaron Lim',
+    parish: 'Church of St Ignatius',
+    area: 'Central',
+    groups: ['Primary'],
+    years: 3,
+    styles: ['Storytelling', 'Prayer-centred'],
+    expertise: ['Classroom management', 'Lesson delivery', 'Praying with children'],
+    meetingModes: ['Video', 'In person'],
+    availability: ['Weekend morning', 'Weekday evening'],
+    fit: 70,
+    tone: 0,
+    bio: 'Enjoys helping new catechists build confidence and plan engaging lessons.',
+  },
+  {
+    id: 'demo-chinese-02',
+    name: 'Rachel Chua',
+    parish: 'Church of the Holy Family',
+    area: 'East',
+    groups: ['Secondary'],
+    years: 6,
+    styles: ['Discussion-led'],
+    expertise: ['Engaging students', 'Lesson planning', 'Talking with parents'],
+    meetingModes: ['Video', 'Either'],
+    availability: ['Weekend afternoon', 'Weekday evening'],
+    fit: 77,
+    tone: 1,
+    bio: 'Supports fellow catechists with practical classroom ideas and prayerful reflection.',
+  },
+  {
+    id: 'demo-chinese-03',
+    name: 'Marcus Koh',
+    parish: 'Church of the Holy Spirit',
+    area: 'West',
+    groups: ['Youth'],
+    years: 9,
+    styles: ['Activity-based'],
+    expertise: ['Supporting different learning needs', 'Classroom management', 'Staying motivated'],
+    meetingModes: ['In person', 'Either'],
+    availability: ['Weekday afternoon', 'Weekend morning'],
+    fit: 84,
+    tone: 2,
+    bio: 'Has experience guiding young people and sharing faith through conversation.',
+  },
+  {
+    id: 'demo-chinese-04',
+    name: 'Jasmine Teo',
+    parish: 'Church of St Vincent de Paul',
+    area: 'Central',
+    groups: ['Primary', 'Special needs'],
+    years: 12,
+    styles: ['Structured', 'Storytelling'],
+    expertise: ['Praying with children', 'Lesson planning', 'Staying motivated'],
+    meetingModes: ['Video', 'In person'],
+    availability: ['Weekend evening', 'Weekend morning'],
+    fit: 91,
+    tone: 3,
+    bio: 'Loves creating welcoming, activity-based lessons for children.',
+  },
+  {
+    id: 'demo-chinese-05',
+    name: 'Nicholas Ong',
+    parish: 'Church of the Sacred Heart',
+    area: 'East',
+    groups: ['Youth', 'Secondary'],
+    years: 15,
+    styles: ['Prayer-centred', 'Discussion-led'],
+    expertise: ['Engaging students', 'Lesson delivery', 'Talking with parents'],
+    meetingModes: ['Video', 'Either'],
+    availability: ['Weekday evening', 'Weekend afternoon'],
+    fit: 71,
+    tone: 4,
+    bio: 'Offers a calm, encouraging perspective on the everyday challenges of catechesis.',
+  },
+  {
+    id: 'demo-chinese-06',
+    name: 'Michelle Goh',
+    parish: 'Church of St Francis Xavier',
+    area: 'West',
+    groups: ['Primary'],
+    years: 18,
+    styles: ['Storytelling', 'Prayer-centred'],
+    expertise: ['Classroom management', 'Lesson delivery', 'Praying with children'],
+    meetingModes: ['In person', 'Either'],
+    availability: ['Weekend morning', 'Weekday evening'],
+    fit: 78,
+    tone: 0,
+    bio: 'Enjoys helping new catechists build confidence and plan engaging lessons.',
+  },
+  {
+    id: 'demo-chinese-07',
+    name: 'Ethan Yeo',
+    parish: 'Church of the Risen Christ',
+    area: 'Central',
+    groups: ['Secondary'],
+    years: 3,
+    styles: ['Discussion-led'],
+    expertise: ['Engaging students', 'Lesson planning', 'Talking with parents'],
+    meetingModes: ['Video', 'In person'],
+    availability: ['Weekend afternoon', 'Weekday evening'],
+    fit: 85,
+    tone: 1,
+    bio: 'Supports fellow catechists with practical classroom ideas and prayerful reflection.',
+  },
+  {
+    id: 'demo-chinese-08',
+    name: 'Grace Lau',
+    parish: 'Church of Our Lady of Lourdes',
+    area: 'East',
+    groups: ['Youth'],
+    years: 6,
+    styles: ['Activity-based'],
+    expertise: ['Supporting different learning needs', 'Classroom management', 'Staying motivated'],
+    meetingModes: ['Video', 'Either'],
+    availability: ['Weekday afternoon', 'Weekend morning'],
+    fit: 92,
+    tone: 2,
+    bio: 'Has experience guiding young people and sharing faith through conversation.',
+  },
+  {
+    id: 'demo-chinese-09',
+    name: 'Ryan Seah',
+    parish: 'Church of St Ignatius',
+    area: 'West',
+    groups: ['Primary', 'Special needs'],
+    years: 9,
+    styles: ['Structured', 'Storytelling'],
+    expertise: ['Praying with children', 'Lesson planning', 'Staying motivated'],
+    meetingModes: ['In person', 'Either'],
+    availability: ['Weekend evening', 'Weekend morning'],
+    fit: 72,
+    tone: 3,
+    bio: 'Loves creating welcoming, activity-based lessons for children.',
+  },
+  {
+    id: 'demo-chinese-10',
+    name: 'Cheryl Toh',
+    parish: 'Church of the Holy Family',
+    area: 'Central',
+    groups: ['Youth', 'Secondary'],
+    years: 12,
+    styles: ['Prayer-centred', 'Discussion-led'],
+    expertise: ['Engaging students', 'Lesson delivery', 'Talking with parents'],
+    meetingModes: ['Video', 'In person'],
+    availability: ['Weekday evening', 'Weekend afternoon'],
+    fit: 79,
+    tone: 4,
+    bio: 'Offers a calm, encouraging perspective on the everyday challenges of catechesis.',
+  },
+  {
+    id: 'demo-chinese-11',
+    name: 'Benjamin Low',
+    parish: 'Church of the Holy Spirit',
+    area: 'East',
+    groups: ['Primary'],
+    years: 15,
+    styles: ['Storytelling', 'Prayer-centred'],
+    expertise: ['Classroom management', 'Lesson delivery', 'Praying with children'],
+    meetingModes: ['Video', 'Either'],
+    availability: ['Weekend morning', 'Weekday evening'],
+    fit: 86,
+    tone: 0,
+    bio: 'Enjoys helping new catechists build confidence and plan engaging lessons.',
+  },
+  {
+    id: 'demo-chinese-12',
+    name: 'Claudia Tan',
+    parish: 'Church of St Vincent de Paul',
+    area: 'West',
+    groups: ['Secondary'],
+    years: 18,
+    styles: ['Discussion-led'],
+    expertise: ['Engaging students', 'Lesson planning', 'Talking with parents'],
+    meetingModes: ['In person', 'Either'],
+    availability: ['Weekend afternoon', 'Weekday evening'],
+    fit: 93,
+    tone: 1,
+    bio: 'Supports fellow catechists with practical classroom ideas and prayerful reflection.',
+  },
+  {
+    id: 'demo-chinese-13',
+    name: 'Darren Ho',
+    parish: 'Church of the Sacred Heart',
+    area: 'Central',
+    groups: ['Youth'],
+    years: 3,
+    styles: ['Activity-based'],
+    expertise: ['Supporting different learning needs', 'Classroom management', 'Staying motivated'],
+    meetingModes: ['Video', 'In person'],
+    availability: ['Weekday afternoon', 'Weekend morning'],
+    fit: 73,
+    tone: 2,
+    bio: 'Has experience guiding young people and sharing faith through conversation.',
+  },
+  {
+    id: 'demo-indian-14',
+    name: 'Arun Kumar',
+    parish: 'Church of St Francis Xavier',
+    area: 'East',
+    groups: ['Primary', 'Special needs'],
+    years: 6,
+    styles: ['Structured', 'Storytelling'],
+    expertise: ['Praying with children', 'Lesson planning', 'Staying motivated'],
+    meetingModes: ['Video', 'Either'],
+    availability: ['Weekend evening', 'Weekend morning'],
+    fit: 80,
+    tone: 3,
+    bio: 'Loves creating welcoming, activity-based lessons for children.',
+  },
+  {
+    id: 'demo-indian-15',
+    name: 'Priya Nair',
+    parish: 'Church of the Risen Christ',
+    area: 'West',
+    groups: ['Youth', 'Secondary'],
+    years: 9,
+    styles: ['Prayer-centred', 'Discussion-led'],
+    expertise: ['Engaging students', 'Lesson delivery', 'Talking with parents'],
+    meetingModes: ['In person', 'Either'],
+    availability: ['Weekday evening', 'Weekend afternoon'],
+    fit: 87,
+    tone: 4,
+    bio: 'Offers a calm, encouraging perspective on the everyday challenges of catechesis.',
+  },
+  {
+    id: 'demo-indian-16',
+    name: 'Rahul Menon',
+    parish: 'Church of Our Lady of Lourdes',
+    area: 'Central',
+    groups: ['Primary'],
+    years: 12,
+    styles: ['Storytelling', 'Prayer-centred'],
+    expertise: ['Classroom management', 'Lesson delivery', 'Praying with children'],
+    meetingModes: ['Video', 'In person'],
+    availability: ['Weekend morning', 'Weekday evening'],
+    fit: 94,
+    tone: 0,
+    bio: 'Enjoys helping new catechists build confidence and plan engaging lessons.',
+  },
+  {
+    id: 'demo-indian-17',
+    name: 'Anita Raj',
+    parish: 'Church of St Ignatius',
+    area: 'East',
+    groups: ['Secondary'],
+    years: 15,
+    styles: ['Discussion-led'],
+    expertise: ['Engaging students', 'Lesson planning', 'Talking with parents'],
+    meetingModes: ['Video', 'Either'],
+    availability: ['Weekend afternoon', 'Weekday evening'],
+    fit: 74,
+    tone: 1,
+    bio: 'Supports fellow catechists with practical classroom ideas and prayerful reflection.',
+  },
+  {
+    id: 'demo-indian-18',
+    name: 'Vikram Singh',
+    parish: 'Church of the Holy Family',
+    area: 'West',
+    groups: ['Youth'],
+    years: 18,
+    styles: ['Activity-based'],
+    expertise: ['Supporting different learning needs', 'Classroom management', 'Staying motivated'],
+    meetingModes: ['In person', 'Either'],
+    availability: ['Weekday afternoon', 'Weekend morning'],
+    fit: 81,
+    tone: 2,
+    bio: 'Has experience guiding young people and sharing faith through conversation.',
+  },
+  {
+    id: 'demo-indian-19',
+    name: 'Deepa Krishnan',
+    parish: 'Church of the Holy Spirit',
+    area: 'Central',
+    groups: ['Primary', 'Special needs'],
+    years: 3,
+    styles: ['Structured', 'Storytelling'],
+    expertise: ['Praying with children', 'Lesson planning', 'Staying motivated'],
+    meetingModes: ['Video', 'In person'],
+    availability: ['Weekend evening', 'Weekend morning'],
+    fit: 88,
+    tone: 3,
+    bio: 'Loves creating welcoming, activity-based lessons for children.',
+  },
+  {
+    id: 'demo-indian-20',
+    name: 'Rohan Pillai',
+    parish: 'Church of St Vincent de Paul',
+    area: 'East',
+    groups: ['Youth', 'Secondary'],
+    years: 6,
+    styles: ['Prayer-centred', 'Discussion-led'],
+    expertise: ['Engaging students', 'Lesson delivery', 'Talking with parents'],
+    meetingModes: ['Video', 'Either'],
+    availability: ['Weekday evening', 'Weekend afternoon'],
+    fit: 95,
+    tone: 4,
+    bio: 'Offers a calm, encouraging perspective on the everyday challenges of catechesis.',
+  },
+  {
+    id: 'demo-indian-21',
+    name: 'Meera Subramaniam',
+    parish: 'Church of the Sacred Heart',
+    area: 'West',
+    groups: ['Primary'],
+    years: 9,
+    styles: ['Storytelling', 'Prayer-centred'],
+    expertise: ['Classroom management', 'Lesson delivery', 'Praying with children'],
+    meetingModes: ['In person', 'Either'],
+    availability: ['Weekend morning', 'Weekday evening'],
+    fit: 75,
+    tone: 0,
+    bio: 'Enjoys helping new catechists build confidence and plan engaging lessons.',
+  },
+  {
+    id: 'demo-indian-22',
+    name: 'Karthik Raman',
+    parish: 'Church of St Francis Xavier',
+    area: 'Central',
+    groups: ['Secondary'],
+    years: 12,
+    styles: ['Discussion-led'],
+    expertise: ['Engaging students', 'Lesson planning', 'Talking with parents'],
+    meetingModes: ['Video', 'In person'],
+    availability: ['Weekend afternoon', 'Weekday evening'],
+    fit: 82,
+    tone: 1,
+    bio: 'Supports fellow catechists with practical classroom ideas and prayerful reflection.',
+  },
+  {
+    id: 'demo-indian-23',
+    name: 'Divya Iyer',
+    parish: 'Church of the Risen Christ',
+    area: 'East',
+    groups: ['Youth'],
+    years: 15,
+    styles: ['Activity-based'],
+    expertise: ['Supporting different learning needs', 'Classroom management', 'Staying motivated'],
+    meetingModes: ['Video', 'Either'],
+    availability: ['Weekday afternoon', 'Weekend morning'],
+    fit: 89,
+    tone: 2,
+    bio: 'Has experience guiding young people and sharing faith through conversation.',
+  },
+  {
+    id: 'demo-indian-24',
+    name: 'Sanjay Das',
+    parish: 'Church of Our Lady of Lourdes',
+    area: 'West',
+    groups: ['Primary', 'Special needs'],
+    years: 18,
+    styles: ['Structured', 'Storytelling'],
+    expertise: ['Praying with children', 'Lesson planning', 'Staying motivated'],
+    meetingModes: ['In person', 'Either'],
+    availability: ['Weekend evening', 'Weekend morning'],
+    fit: 96,
+    tone: 3,
+    bio: 'Loves creating welcoming, activity-based lessons for children.',
+  },
+  {
+    id: 'demo-indian-25',
+    name: 'Nisha Balakrishnan',
+    parish: 'Church of St Ignatius',
+    area: 'Central',
+    groups: ['Youth', 'Secondary'],
+    years: 3,
+    styles: ['Prayer-centred', 'Discussion-led'],
+    expertise: ['Engaging students', 'Lesson delivery', 'Talking with parents'],
+    meetingModes: ['Video', 'In person'],
+    availability: ['Weekday evening', 'Weekend afternoon'],
+    fit: 76,
+    tone: 4,
+    bio: 'Offers a calm, encouraging perspective on the everyday challenges of catechesis.',
+  },
+  {
+    id: 'demo-indian-26',
+    name: 'Joel D\'Souza',
+    parish: 'Church of the Holy Family',
+    area: 'East',
+    groups: ['Primary'],
+    years: 6,
+    styles: ['Storytelling', 'Prayer-centred'],
+    expertise: ['Classroom management', 'Lesson delivery', 'Praying with children'],
+    meetingModes: ['Video', 'Either'],
+    availability: ['Weekend morning', 'Weekday evening'],
+    fit: 83,
+    tone: 0,
+    bio: 'Enjoys helping new catechists build confidence and plan engaging lessons.',
+  },
+  {
+    id: 'demo-indonesian-27',
+    name: 'Adrian Wijaya',
+    parish: 'Church of the Holy Spirit',
+    area: 'West',
+    groups: ['Secondary'],
+    years: 9,
+    styles: ['Discussion-led'],
+    expertise: ['Engaging students', 'Lesson planning', 'Talking with parents'],
+    meetingModes: ['In person', 'Either'],
+    availability: ['Weekend afternoon', 'Weekday evening'],
+    fit: 90,
+    tone: 1,
+    bio: 'Supports fellow catechists with practical classroom ideas and prayerful reflection.',
+  },
+  {
+    id: 'demo-indonesian-28',
+    name: 'Maria Natalia',
+    parish: 'Church of St Vincent de Paul',
+    area: 'Central',
+    groups: ['Youth'],
+    years: 12,
+    styles: ['Activity-based'],
+    expertise: ['Supporting different learning needs', 'Classroom management', 'Staying motivated'],
+    meetingModes: ['Video', 'In person'],
+    availability: ['Weekday afternoon', 'Weekend morning'],
+    fit: 70,
+    tone: 2,
+    bio: 'Has experience guiding young people and sharing faith through conversation.',
+  },
+  {
+    id: 'demo-indonesian-29',
+    name: 'Kevin Santoso',
+    parish: 'Church of the Sacred Heart',
+    area: 'East',
+    groups: ['Primary', 'Special needs'],
+    years: 15,
+    styles: ['Structured', 'Storytelling'],
+    expertise: ['Praying with children', 'Lesson planning', 'Staying motivated'],
+    meetingModes: ['Video', 'Either'],
+    availability: ['Weekend evening', 'Weekend morning'],
+    fit: 77,
+    tone: 3,
+    bio: 'Loves creating welcoming, activity-based lessons for children.',
+  },
+  {
+    id: 'demo-indonesian-30',
+    name: 'Clara Hartono',
+    parish: 'Church of St Francis Xavier',
+    area: 'West',
+    groups: ['Youth', 'Secondary'],
+    years: 18,
+    styles: ['Prayer-centred', 'Discussion-led'],
+    expertise: ['Engaging students', 'Lesson delivery', 'Talking with parents'],
+    meetingModes: ['In person', 'Either'],
+    availability: ['Weekday evening', 'Weekend afternoon'],
+    fit: 84,
+    tone: 4,
+    bio: 'Offers a calm, encouraging perspective on the everyday challenges of catechesis.',
+  },
+  {
+    id: 'demo-indonesian-31',
+    name: 'Daniel Pratama',
+    parish: 'Church of the Risen Christ',
+    area: 'Central',
+    groups: ['Primary'],
+    years: 3,
+    styles: ['Storytelling', 'Prayer-centred'],
+    expertise: ['Classroom management', 'Lesson delivery', 'Praying with children'],
+    meetingModes: ['Video', 'In person'],
+    availability: ['Weekend morning', 'Weekday evening'],
+    fit: 91,
+    tone: 0,
+    bio: 'Enjoys helping new catechists build confidence and plan engaging lessons.',
+  },
+  {
+    id: 'demo-indonesian-32',
+    name: 'Theresia Putri',
+    parish: 'Church of Our Lady of Lourdes',
+    area: 'East',
+    groups: ['Secondary'],
+    years: 6,
+    styles: ['Discussion-led'],
+    expertise: ['Engaging students', 'Lesson planning', 'Talking with parents'],
+    meetingModes: ['Video', 'Either'],
+    availability: ['Weekend afternoon', 'Weekday evening'],
+    fit: 71,
+    tone: 1,
+    bio: 'Supports fellow catechists with practical classroom ideas and prayerful reflection.',
+  },
+  {
+    id: 'demo-indonesian-33',
+    name: 'Michael Gunawan',
+    parish: 'Church of St Ignatius',
+    area: 'West',
+    groups: ['Youth'],
+    years: 9,
+    styles: ['Activity-based'],
+    expertise: ['Supporting different learning needs', 'Classroom management', 'Staying motivated'],
+    meetingModes: ['In person', 'Either'],
+    availability: ['Weekday afternoon', 'Weekend morning'],
+    fit: 78,
+    tone: 2,
+    bio: 'Has experience guiding young people and sharing faith through conversation.',
+  },
+  {
+    id: 'demo-indonesian-34',
+    name: 'Stefanie Kusuma',
+    parish: 'Church of the Holy Family',
+    area: 'Central',
+    groups: ['Primary', 'Special needs'],
+    years: 12,
+    styles: ['Structured', 'Storytelling'],
+    expertise: ['Praying with children', 'Lesson planning', 'Staying motivated'],
+    meetingModes: ['Video', 'In person'],
+    availability: ['Weekend evening', 'Weekend morning'],
+    fit: 85,
+    tone: 3,
+    bio: 'Loves creating welcoming, activity-based lessons for children.',
+  },
+  {
+    id: 'demo-indonesian-35',
+    name: 'Andreas Setiawan',
+    parish: 'Church of the Holy Spirit',
+    area: 'East',
+    groups: ['Youth', 'Secondary'],
+    years: 15,
+    styles: ['Prayer-centred', 'Discussion-led'],
+    expertise: ['Engaging students', 'Lesson delivery', 'Talking with parents'],
+    meetingModes: ['Video', 'Either'],
+    availability: ['Weekday evening', 'Weekend afternoon'],
+    fit: 92,
+    tone: 4,
+    bio: 'Offers a calm, encouraging perspective on the everyday challenges of catechesis.',
+  },
+  {
+    id: 'demo-indonesian-36',
+    name: 'Veronica Limanto',
+    parish: 'Church of St Vincent de Paul',
+    area: 'West',
+    groups: ['Primary'],
+    years: 18,
+    styles: ['Storytelling', 'Prayer-centred'],
+    expertise: ['Classroom management', 'Lesson delivery', 'Praying with children'],
+    meetingModes: ['In person', 'Either'],
+    availability: ['Weekend morning', 'Weekday evening'],
+    fit: 72,
+    tone: 0,
+    bio: 'Enjoys helping new catechists build confidence and plan engaging lessons.',
+  },
+  {
+    id: 'demo-indonesian-37',
+    name: 'Felix Kurniawan',
+    parish: 'Church of the Sacred Heart',
+    area: 'Central',
+    groups: ['Secondary'],
+    years: 3,
+    styles: ['Discussion-led'],
+    expertise: ['Engaging students', 'Lesson planning', 'Talking with parents'],
+    meetingModes: ['Video', 'In person'],
+    availability: ['Weekend afternoon', 'Weekday evening'],
+    fit: 79,
+    tone: 1,
+    bio: 'Supports fellow catechists with practical classroom ideas and prayerful reflection.',
+  },
+  {
+    id: 'demo-indonesian-38',
+    name: 'Cecilia Tanudjaja',
+    parish: 'Church of St Francis Xavier',
+    area: 'East',
+    groups: ['Youth'],
+    years: 6,
+    styles: ['Activity-based'],
+    expertise: ['Supporting different learning needs', 'Classroom management', 'Staying motivated'],
+    meetingModes: ['Video', 'Either'],
+    availability: ['Weekday afternoon', 'Weekend morning'],
+    fit: 86,
+    tone: 2,
+    bio: 'Has experience guiding young people and sharing faith through conversation.',
+  },
+  {
+    id: 'demo-filipino-39',
+    name: 'Miguel Santos',
+    parish: 'Church of the Risen Christ',
+    area: 'West',
+    groups: ['Primary', 'Special needs'],
+    years: 9,
+    styles: ['Structured', 'Storytelling'],
+    expertise: ['Praying with children', 'Lesson planning', 'Staying motivated'],
+    meetingModes: ['In person', 'Either'],
+    availability: ['Weekend evening', 'Weekend morning'],
+    fit: 93,
+    tone: 3,
+    bio: 'Loves creating welcoming, activity-based lessons for children.',
+  },
+  {
+    id: 'demo-filipino-40',
+    name: 'Angela Reyes',
+    parish: 'Church of Our Lady of Lourdes',
+    area: 'Central',
+    groups: ['Youth', 'Secondary'],
+    years: 12,
+    styles: ['Prayer-centred', 'Discussion-led'],
+    expertise: ['Engaging students', 'Lesson delivery', 'Talking with parents'],
+    meetingModes: ['Video', 'In person'],
+    availability: ['Weekday evening', 'Weekend afternoon'],
+    fit: 73,
+    tone: 4,
+    bio: 'Offers a calm, encouraging perspective on the everyday challenges of catechesis.',
+  },
+  {
+    id: 'demo-filipino-41',
+    name: 'Joshua dela Cruz',
+    parish: 'Church of St Ignatius',
+    area: 'East',
+    groups: ['Primary'],
+    years: 15,
+    styles: ['Storytelling', 'Prayer-centred'],
+    expertise: ['Classroom management', 'Lesson delivery', 'Praying with children'],
+    meetingModes: ['Video', 'Either'],
+    availability: ['Weekend morning', 'Weekday evening'],
+    fit: 80,
+    tone: 0,
+    bio: 'Enjoys helping new catechists build confidence and plan engaging lessons.',
+  },
+  {
+    id: 'demo-filipino-42',
+    name: 'Maria Garcia',
+    parish: 'Church of the Holy Family',
+    area: 'West',
+    groups: ['Secondary'],
+    years: 18,
+    styles: ['Discussion-led'],
+    expertise: ['Engaging students', 'Lesson planning', 'Talking with parents'],
+    meetingModes: ['In person', 'Either'],
+    availability: ['Weekend afternoon', 'Weekday evening'],
+    fit: 87,
+    tone: 1,
+    bio: 'Supports fellow catechists with practical classroom ideas and prayerful reflection.',
+  },
+  {
+    id: 'demo-filipino-43',
+    name: 'Paolo Mendoza',
+    parish: 'Church of the Holy Spirit',
+    area: 'Central',
+    groups: ['Youth'],
+    years: 3,
+    styles: ['Activity-based'],
+    expertise: ['Supporting different learning needs', 'Classroom management', 'Staying motivated'],
+    meetingModes: ['Video', 'In person'],
+    availability: ['Weekday afternoon', 'Weekend morning'],
+    fit: 94,
+    tone: 2,
+    bio: 'Has experience guiding young people and sharing faith through conversation.',
+  },
+  {
+    id: 'demo-filipino-44',
+    name: 'Therese Bautista',
+    parish: 'Church of St Vincent de Paul',
+    area: 'East',
+    groups: ['Primary', 'Special needs'],
+    years: 6,
+    styles: ['Structured', 'Storytelling'],
+    expertise: ['Praying with children', 'Lesson planning', 'Staying motivated'],
+    meetingModes: ['Video', 'Either'],
+    availability: ['Weekend evening', 'Weekend morning'],
+    fit: 74,
+    tone: 3,
+    bio: 'Loves creating welcoming, activity-based lessons for children.',
+  },
+  {
+    id: 'demo-filipino-45',
+    name: 'Gabriel Flores',
+    parish: 'Church of the Sacred Heart',
+    area: 'West',
+    groups: ['Youth', 'Secondary'],
+    years: 9,
+    styles: ['Prayer-centred', 'Discussion-led'],
+    expertise: ['Engaging students', 'Lesson delivery', 'Talking with parents'],
+    meetingModes: ['In person', 'Either'],
+    availability: ['Weekday evening', 'Weekend afternoon'],
+    fit: 81,
+    tone: 4,
+    bio: 'Offers a calm, encouraging perspective on the everyday challenges of catechesis.',
+  },
+  {
+    id: 'demo-filipino-46',
+    name: 'Camille Aquino',
+    parish: 'Church of St Francis Xavier',
+    area: 'Central',
+    groups: ['Primary'],
+    years: 12,
+    styles: ['Storytelling', 'Prayer-centred'],
+    expertise: ['Classroom management', 'Lesson delivery', 'Praying with children'],
+    meetingModes: ['Video', 'In person'],
+    availability: ['Weekend morning', 'Weekday evening'],
+    fit: 88,
+    tone: 0,
+    bio: 'Enjoys helping new catechists build confidence and plan engaging lessons.',
+  },
+  {
+    id: 'demo-filipino-47',
+    name: 'Nathaniel Ramos',
+    parish: 'Church of the Risen Christ',
+    area: 'East',
+    groups: ['Secondary'],
+    years: 15,
+    styles: ['Discussion-led'],
+    expertise: ['Engaging students', 'Lesson planning', 'Talking with parents'],
+    meetingModes: ['Video', 'Either'],
+    availability: ['Weekend afternoon', 'Weekday evening'],
+    fit: 95,
+    tone: 1,
+    bio: 'Supports fellow catechists with practical classroom ideas and prayerful reflection.',
+  },
+  {
+    id: 'demo-filipino-48',
+    name: 'Patricia Villanueva',
+    parish: 'Church of Our Lady of Lourdes',
+    area: 'West',
+    groups: ['Youth'],
+    years: 18,
+    styles: ['Activity-based'],
+    expertise: ['Supporting different learning needs', 'Classroom management', 'Staying motivated'],
+    meetingModes: ['In person', 'Either'],
+    availability: ['Weekday afternoon', 'Weekend morning'],
+    fit: 75,
+    tone: 2,
+    bio: 'Has experience guiding young people and sharing faith through conversation.',
+  },
+  {
+    id: 'demo-filipino-49',
+    name: 'Francis Castillo',
+    parish: 'Church of St Ignatius',
+    area: 'Central',
+    groups: ['Primary', 'Special needs'],
+    years: 3,
+    styles: ['Structured', 'Storytelling'],
+    expertise: ['Praying with children', 'Lesson planning', 'Staying motivated'],
+    meetingModes: ['Video', 'In person'],
+    availability: ['Weekend evening', 'Weekend morning'],
+    fit: 82,
+    tone: 3,
+    bio: 'Loves creating welcoming, activity-based lessons for children.',
+  },
+  {
+    id: 'demo-filipino-50',
+    name: 'Isabel Fernandez',
+    parish: 'Church of the Holy Family',
+    area: 'East',
+    groups: ['Youth', 'Secondary'],
+    years: 6,
+    styles: ['Prayer-centred', 'Discussion-led'],
+    expertise: ['Engaging students', 'Lesson delivery', 'Talking with parents'],
+    meetingModes: ['Video', 'Either'],
+    availability: ['Weekday evening', 'Weekend afternoon'],
+    fit: 89,
+    tone: 4,
+    bio: 'Offers a calm, encouraging perspective on the everyday challenges of catechesis.',
   },
 ]
 
@@ -186,6 +986,7 @@ type Profile = {
   years: string
   education: string
   styles: string[]
+  learningNeeds: string[]
   availability: string[]
   meeting: string
   location: string
@@ -195,15 +996,31 @@ function getMentorReasons(mentor: Mentor, profile: Profile) {
   const reasons: string[] = []
   const sharedGroups = mentor.groups.filter((group) => profile.groups.includes(group))
   const sharedTimes = mentor.availability.filter((slot) => profile.availability.includes(slot))
+  const sharedNeeds = mentor.expertise.filter((topic) => profile.learningNeeds.includes(topic))
 
-  if (sharedGroups.length) reasons.push(`Teaches ${sharedGroups.join(', ')} like you`)
+  if (sharedNeeds.length) reasons.push(`Can help with ${sharedNeeds.slice(0, 2).join(' and ')}`)
+  if (sharedGroups.length) reasons.push(`Knows your ${sharedGroups.join(', ')} teaching context`)
   if (sharedTimes.length) reasons.push(`Free ${sharedTimes[0].toLowerCase()}`)
   if (mentor.parish === profile.parish) reasons.push('Same parish')
   if (mentor.styles.some((style) => profile.styles.includes(style))) {
     reasons.push('Similar teaching style')
   }
+  if (mentor.meetingModes.includes(profile.meeting) || mentor.meetingModes.includes('Either') || profile.meeting === 'Either') {
+    reasons.push(`Open to ${profile.meeting.toLowerCase()} meetings`)
+  }
 
   return reasons
+}
+
+function getMentorFit(mentor: Mentor, profile: Profile) {
+  const topicMatches = mentor.expertise.filter((topic) => profile.learningNeeds.includes(topic)).length
+  const groupMatches = mentor.groups.some((group) => profile.groups.includes(group)) ? 1 : 0
+  const timeMatches = mentor.availability.some((slot) => profile.availability.includes(slot)) ? 1 : 0
+  const styleMatches = mentor.styles.some((style) => profile.styles.includes(style)) ? 1 : 0
+  const meetingMatches = mentor.meetingModes.includes(profile.meeting) || mentor.meetingModes.includes('Either') || profile.meeting === 'Either' ? 1 : 0
+  const parishMatches = mentor.parish === profile.parish ? 1 : 0
+  const experience = Math.min(mentor.years, 15) / 15
+  return Math.min(99, Math.round(42 + topicMatches * 9 + groupMatches * 7 + timeMatches * 5 + styleMatches * 3 + meetingMatches * 3 + parishMatches * 3 + experience * 5))
 }
 
 const INITIAL_PROFILE: Profile = {
@@ -215,6 +1032,7 @@ const INITIAL_PROFILE: Profile = {
   years: 'Under 1 year',
   education: 'Degree',
   styles: [],
+  learningNeeds: [],
   availability: [],
   meeting: 'Video',
   location: 'Anywhere in Singapore',
@@ -294,6 +1112,9 @@ function FishMark() {
 
 function App() {
   const [email, setEmail] = useState('')
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [adminTab, setAdminTab] = useState<'Overview' | 'Users' | 'Mentorships' | 'Meetups'>('Overview')
+  const [adminSearch, setAdminSearch] = useState('')
   const [notice, setNotice] = useState('')
   const [showProfile, setShowProfile] = useState(false)
   const [step, setStep] = useState(1)
@@ -337,6 +1158,7 @@ function App() {
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    if (email.trim().toLowerCase() === 'benlim.sg@hotmail.com') { setIsAdmin(true); setAdminTab('Overview'); setNotice(''); return }
     setNotice('Sign-in is not connected yet. Email links will be added in a later step.')
   }
 
@@ -345,7 +1167,7 @@ function App() {
     setError('')
   }
 
-  function toggleProfileList(key: 'groups' | 'styles' | 'availability', value: string) {
+  function toggleProfileList(key: 'groups' | 'styles' | 'learningNeeds' | 'availability', value: string) {
     const selected = profile[key]
     if (selected.includes(value)) {
       updateProfile(key, selected.filter((item) => item !== value))
@@ -353,6 +1175,10 @@ function App() {
     }
     if (key === 'styles' && selected.length >= 3) {
       setError('Choose up to three teaching styles.')
+      return
+    }
+    if (key === 'learningNeeds' && selected.length >= 4) {
+      setError('Choose up to four areas you would like support with.')
       return
     }
     updateProfile(key, [...selected, value])
@@ -581,7 +1407,7 @@ function App() {
       && (filters.parish === 'Any' || mentor.parish === filters.parish)
       && (filters.area === 'Any' || mentor.area === filters.area),
     )
-    .sort((first, second) => second.fit - first.fit)
+    .sort((first, second) => getMentorFit(second, profile) - getMentorFit(first, profile))
   const selectedMentor = MENTORS.find((mentor) => mentor.id === selectedMentorId)
   const otherMatches = visibleMentors.filter((mentor) => mentor.id !== selectedMentorId).slice(0, 3)
   const hasSharedAvailability = selectedMentor?.availability.some((slot) =>
@@ -594,11 +1420,51 @@ function App() {
     )
     : []
 
+
+  if (isAdmin) {
+    const users = [
+      { name: 'Gerald Lim', email: 'gerald.lim@example.com', role: 'Mentee', parish: 'Church of the Holy Family', status: 'Active' },
+      { name: 'Ben Tan', email: 'ben.tan@example.com', role: 'Mentor', parish: 'Church of St Ignatius', status: 'Active' },
+      { name: 'Mary Lourdes Goh', email: 'mary.goh@example.com', role: 'Mentor', parish: 'Church of the Holy Family', status: 'Active' },
+      { name: 'Daniel Rozario', email: 'daniel.r@example.com', role: 'Mentor', parish: 'Church of Our Lady of Lourdes', status: 'Pending' },
+    ]
+    const pairs = [
+      { mentor: 'Ben Tan', mentee: 'Gerald Lim', focus: 'Classroom management', status: 'Active', progress: '2 meetups' },
+      { mentor: 'Mary Lourdes Goh', mentee: 'Clarice Ng', focus: 'Engaging students', status: 'Active', progress: '1 meetup' },
+      { mentor: 'Daniel Rozario', mentee: 'Alicia Tan', focus: 'Lesson delivery', status: 'Pending', progress: 'Not started' },
+    ]
+    const meetups = [
+      { pair: 'Ben Tan + Gerald Lim', date: '17 Oct 2026 · 10:00 AM', mode: 'Video', status: 'Completed', checkin: 'Both confirmed', note: 'Discussed classroom routines; try a quiet signal this week.' },
+      { pair: 'Mary Lourdes Goh + Clarice Ng', date: '18 Oct 2026 · 2:00 PM', mode: 'In person', status: 'Scheduled', checkin: 'Awaiting check-in', note: 'Focus: engaging students through activities.' },
+      { pair: 'Daniel Rozario + Alicia Tan', date: '20 Oct 2026 · 8:00 PM', mode: 'Video', status: 'Needs follow-up', checkin: 'No response yet', note: 'Send a gentle reminder to confirm the meeting.' },
+    ]
+    const filteredUsers = users.filter((user) => [user.name, user.email, user.parish, user.role].some((value) => value.toLowerCase().includes(adminSearch.toLowerCase())))
+    return (
+      <main className="admin-page">
+        <aside className="admin-sidebar">
+          <div className="admin-brand"><span className="admin-brand-icon"><FishMark /></span><div><strong>CateLink</strong><small>ADMIN SPACE</small></div></div>
+          <nav className="admin-nav" aria-label="Admin navigation">
+            {(['Overview', 'Users', 'Mentorships', 'Meetups'] as const).map((tab) => <button className={adminTab === tab ? 'admin-nav-item active' : 'admin-nav-item'} key={tab} onClick={() => { setAdminTab(tab); setAdminSearch('') }} type="button"><span aria-hidden="true">{tab === 'Overview' ? '◫' : tab === 'Users' ? '♙' : tab === 'Mentorships' ? '♡' : '◷'}</span>{tab}</button>)}
+          </nav>
+          <div className="admin-sidebar-bottom"><span className="admin-avatar">BL</span><div><strong>Admin</strong><small>benlim.sg@hotmail.com</small></div><button className="admin-logout" onClick={() => { setIsAdmin(false); setEmail(''); setNotice('') }} type="button">Sign out</button></div>
+        </aside>
+        <section className="admin-main">
+          <header className="admin-topbar"><div><p className="eyebrow">CateLink / Admin</p><h1>{adminTab}</h1><p className="admin-subtitle">A gentle overview of your catechist community.</p></div><div className="admin-topbar-actions"><span className="admin-profile-pill"><span className="admin-avatar">BL</span> Admin</span><button className="admin-logout-button" onClick={() => { setIsAdmin(false); setEmail(''); setNotice(''); setAdminSearch('') }} type="button">↪ Log out</button></div></header>
+          {adminTab === 'Overview' && <><div className="admin-welcome-banner"><div><span className="admin-kicker">COMMUNITY CARE</span><h2>Walking together, one catechist at a time.</h2><p>See how your mentoring community is doing and follow up where encouragement may help.</p></div><div className="admin-banner-mark"><FishMark /></div></div><div className="admin-stat-grid">{[{label:'Total users',value:'24',delta:'18 mentees · 6 mentors'},{label:'Active pairs',value:'8',delta:'2 matches awaiting reply'},{label:'Meetups this month',value:'16',delta:'12 completed · 4 upcoming'},{label:'Need follow-up',value:'3',delta:'A gentle check-in may help'}].map((stat) => <article className="admin-stat-card" key={stat.label}><p>{stat.label}</p><strong>{stat.value}</strong><small>{stat.delta}</small></article>)}</div><div className="admin-panel"><h2>Needs a little care</h2><p>One meetup needs confirmation, one mentee could use a first-session check-in, and one mentor profile is awaiting review.</p><button className="primary-button admin-action" onClick={() => setAdminTab('Meetups')} type="button">Review meetups</button></div></>}
+          {adminTab === 'Users' && <section className="admin-panel"><div className="admin-panel-heading"><div><h2>Community members</h2><p>Sample user records</p></div><input className="admin-search" aria-label="Search users" placeholder="Search name, email, parish..." value={adminSearch} onChange={(event) => setAdminSearch(event.target.value)} /></div><div className="admin-table-wrap"><table className="admin-table"><thead><tr><th>Member</th><th>Role</th><th>Parish</th><th>Status</th></tr></thead><tbody>{filteredUsers.map((user) => <tr key={user.email}><td><strong>{user.name}</strong><small>{user.email}</small></td><td>{user.role}</td><td>{user.parish}</td><td><span className="admin-status">{user.status}</span></td></tr>)}</tbody></table>{filteredUsers.length === 0 && <p>No demo users match that search.</p>}</div></section>}
+          {adminTab === 'Mentorships' && <section className="admin-panel"><h2>Mentorship pairs</h2><p>Learning goals and progress · demo data</p><div className="admin-pair-grid">{pairs.map((pair) => <article className="admin-pair-card" key={pair.mentor + pair.mentee}><span className="admin-status">{pair.status}</span><h3>{pair.mentor}</h3><p>mentoring</p><h3>{pair.mentee}</h3><div className="admin-pair-focus"><small>LEARNING FOCUS</small><strong>{pair.focus}</strong></div><footer>{pair.progress}</footer></article>)}</div></section>}
+          {adminTab === 'Meetups' && <section className="admin-panel"><div className="admin-panel-heading"><div><h2>Meetups & check-ins</h2><p>Meeting history and follow-up notes</p></div><input className="admin-search" aria-label="Search meetups" placeholder="Search pair or status..." value={adminSearch} onChange={(event) => setAdminSearch(event.target.value)} /></div><div className="admin-meetup-list">{meetups.filter((meetup) => [meetup.pair, meetup.status, meetup.checkin].some((value) => value.toLowerCase().includes(adminSearch.toLowerCase()))).map((meetup) => <article className="admin-meetup-card" key={meetup.pair}><div className="admin-meetup-top"><div><h3>{meetup.pair}</h3><p>{meetup.date} · {meetup.mode}</p></div><span className="admin-status">{meetup.status}</span></div><div className="admin-checkin"><small>MEETUP CHECK-IN</small><strong>{meetup.checkin}</strong><p>{meetup.note}</p></div></article>)}</div></section>}
+          <footer className="admin-footer">CateLink Admin · Demo dashboard · Not connected to a live database</footer>
+        </section>
+      </main>
+    )
+  }
+
   if (!showProfile) {
     return (
       <main className="welcome-page">
         <section className="welcome-card" aria-labelledby="welcome-title">
-          <div className="brand-mark" aria-hidden="true">
+          <div className="brand-mark brand-mark-animated" aria-hidden="true">
             <FishMark />
           </div>
 
@@ -628,7 +1494,7 @@ function App() {
               value={email}
             />
             <button className="primary-button" type="submit">
-              Send me a sign-in link
+              {email.trim().toLowerCase() === 'benlim.sg@hotmail.com' ? 'Login as Admin' : 'Send me a sign-in link'}
             </button>
           </form>
 
@@ -1568,8 +2434,7 @@ function App() {
           <p className="eyebrow">Your next step</p>
           <h1 className="profile-title" id="discover-title">Mentors for you</h1>
           <p className="profile-description">
-            Bigger bubbles are a closer demo fit. Select someone to see why your
-            experience and availability may work well together.
+            Matches are ranked by your learning goals, teaching context, experience, parish and shared availability. Select someone to see the reasons.
           </p>
           <p className="demo-disclaimer" role="note">
             Demo directory and fit scores only. No real mentor accounts are connected.
@@ -1627,13 +2492,13 @@ function App() {
               <div className="mentor-bubbles" aria-label="Suggested mentors">
                 {visibleMentors.map((mentor) => (
                   <button
-                    aria-label={`${mentor.name}, ${mentor.fit}% demo fit`}
+                    aria-label={`${mentor.name}, ${getMentorFit(mentor, profile)}% demo fit`}
                     className={`mentor-bubble tone-${mentor.tone}`}
                     key={mentor.id}
                     onClick={() => openMentor(mentor.id)}
                     style={{
-                      width: `${78 + (mentor.fit - 68) * 1.15}px`,
-                      height: `${78 + (mentor.fit - 68) * 1.15}px`,
+                      width: `${78 + (getMentorFit(mentor, profile) - 60) * 1.15}px`,
+                      height: `${78 + (getMentorFit(mentor, profile) - 60) * 1.15}px`,
                     }}
                     type="button"
                   >
@@ -1687,17 +2552,19 @@ function App() {
                 <p className="mentor-location">{selectedMentor.parish} · {selectedMentor.area}</p>
                 <p className="mentor-bio">{selectedMentor.bio}</p>
                 <div className="fit-summary">
-                  <div className="fit-label"><span>Demo fit</span><strong>{selectedMentor.fit}%</strong></div>
+                  <div className="fit-label"><span>Match score · demo</span><strong>{getMentorFit(selectedMentor, profile)}%</strong></div>
                   <div
-                    aria-label={`${selectedMentor.fit}% example fit`}
+                    aria-label={`${getMentorFit(selectedMentor, profile)}% example fit`}
                     className="fit-track"
                     role="img"
                   >
-                    <span style={{ width: `${selectedMentor.fit}%` }} />
+                    <span style={{ width: `${getMentorFit(selectedMentor, profile)}%` }} />
                   </div>
                 </div>
                 <dl className="mentor-facts">
                   <dt>Teaches</dt><dd>{selectedMentor.groups.join(', ')} · {selectedMentor.years} years</dd>
+                  <dt>Expertise</dt><dd>{selectedMentor.expertise.join(', ')}</dd>
+                  <dt>Meetings</dt><dd>{selectedMentor.meetingModes.join(', ')}</dd>
                   <dt>Style</dt><dd>{selectedMentor.styles.join(', ')}</dd>
                   <dt>Usually free</dt><dd>{selectedMentor.availability.join(', ')}</dd>
                 </dl>
@@ -1829,14 +2696,8 @@ function App() {
 
             <div className="profile-field">
               <label className="field-label" htmlFor="profile-parish">Parish</label>
-              <select
-                className="profile-input"
-                id="profile-parish"
-                onChange={(event) => updateProfile('parish', event.target.value)}
-                value={profile.parish}
-              >
-                {PARISHES.map((parish) => <option key={parish}>{parish}</option>)}
-              </select>
+              <input className="profile-input" id="profile-parish" list="singapore-parishes" onChange={(event) => updateProfile('parish', event.target.value)} placeholder="Choose or type your parish" value={profile.parish} />
+              <datalist id="singapore-parishes">{PARISHES.map((parish) => <option key={parish} value={parish} />)}</datalist>
             </div>
 
             <ChoiceGroup
@@ -1891,6 +2752,14 @@ function App() {
                 ))}
               </select>
             </div>
+
+            <MultiChoiceGroup
+              hint={`${profile.learningNeeds.length} of 4 selected`}
+              label="What would you like help with? (pick up to 4)"
+              onToggle={(value) => toggleProfileList('learningNeeds', value)}
+              options={LEARNING_NEEDS}
+              selected={profile.learningNeeds}
+            />
 
             <MultiChoiceGroup
               hint={`${profile.styles.length} of 3 selected`}
