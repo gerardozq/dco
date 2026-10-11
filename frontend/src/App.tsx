@@ -1487,7 +1487,7 @@ function App() {
       <main className="welcome-page">{themeToggle}
         <section className="welcome-card" aria-labelledby="welcome-title">
           <div className="brand-mark" aria-hidden="true">
-            <FishMark />
+            <FishMark animated />
           </div>
 
           <div className="brand-copy">

@@ -38,7 +38,8 @@ test('renders the CateLink welcome screen', () => {
   expect(screen.getByRole('textbox', { name: 'Email' })).toBeDefined()
   expect(screen.getByRole('button', { name: 'Send me a sign-in link' })).toBeDefined()
   expect(screen.getByText(/No password to remember/)).toBeDefined()
-  expect(document.querySelector('.fish-mark-joining')).toBeNull()
+  const welcome = screen.getByRole('region', { name: 'CateLink' })
+  expect(welcome.querySelector('.brand-mark .fish-mark-joining')).not.toBeNull()
 })
 
 test('validates profile steps and keeps choices while moving back', async () => {

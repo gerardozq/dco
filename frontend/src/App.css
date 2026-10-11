@@ -46,6 +46,9 @@
 
 .fish-mark-joining {
   display: block;
+}
+
+.completion-card .fish-mark-joining {
   width: min(100%, 210px);
   margin: 0 auto 24px;
 }
@@ -2303,7 +2306,7 @@ body { background-color: #faf7f4; }
   flex: 0 0 auto;
   width: clamp(150px, 16vw, 185px);
   height: clamp(90px, 10vw, 112px);
-  margin: clamp(38px, 5vh, 58px) auto 0;
+  margin: calc(clamp(38px, 5vh, 58px) + 80px) auto 0;
 }
 
 .welcome-page:not(.profile-page) .fish-mark {
@@ -2443,7 +2446,7 @@ body { background-color: #faf7f4; }
   .welcome-page:not(.profile-page) .brand-mark {
     width: clamp(140px, 22vw, 178px);
     height: clamp(86px, 13vw, 108px);
-    margin-top: clamp(100px, 20vh, 285px);
+    margin-top: calc(clamp(100px, 20vh, 285px) + 80px);
   }
 
   .welcome-page:not(.profile-page) .brand-copy h1 {
@@ -2496,7 +2499,7 @@ body { background-color: #faf7f4; }
   .welcome-page:not(.profile-page) .brand-mark {
     width: 126px;
     height: 82px;
-    margin-top: clamp(70px, 18vh, 180px);
+    margin-top: calc(clamp(70px, 18vh, 180px) + 80px);
   }
 
   .welcome-page:not(.profile-page) .brand-copy {
@@ -2549,7 +2552,7 @@ body { background-color: #faf7f4; }
   }
 
   .welcome-page:not(.profile-page) .brand-mark {
-    margin-top: clamp(24px, 4vh, 42px);
+    margin-top: calc(clamp(24px, 4vh, 42px) + 64px);
   }
 }
 

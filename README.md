@@ -22,7 +22,7 @@ accounts, and real message, request, calendar, or call-provider connections are
 not implemented. Call notes and summaries are entered by the user; there is no
 recording or transcription. No AWS credentials are needed to run the app locally.
 
-On the mentor-match preview, the gold and blue fish arcs start slightly apart
+On the welcome page and mentor-match preview, the gold and blue fish arcs start apart
 and join once, following the prototype's timing. Reduced-motion users see the
 joined fish without animation.
 
