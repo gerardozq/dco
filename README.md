@@ -40,6 +40,9 @@ npm run build
 npm run preview
 ```
 
+The test configuration disables Node's native web-storage globals in test
+workers so jsdom supplies browser-compatible storage, including on Node 26.
+
 ## Run the production container
 
 From the repository root:

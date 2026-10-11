@@ -5,6 +5,7 @@ import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import App from './App'
 
 beforeEach(() => {
+  window.localStorage.clear()
   vi.stubGlobal('ResizeObserver', class {
     observe() {}
     disconnect() {}
@@ -49,6 +50,17 @@ test('renders the CateLink welcome screen', () => {
   expect(screen.getByText(/No password to remember/)).toBeDefined()
   const welcome = screen.getByRole('region', { name: 'CateLink' })
   expect(welcome.querySelector('.brand-mark .fish-mark-joining')).not.toBeNull()
+})
+
+test('restores the saved theme and persists theme changes using browser storage', async () => {
+  const user = userEvent.setup()
+  window.localStorage.setItem('catelink-theme', 'dark')
+  render(<App />)
+
+  expect(document.documentElement.dataset.theme).toBe('dark')
+  await user.click(screen.getByRole('button', { name: 'Switch to light mode' }))
+  expect(document.documentElement.dataset.theme).toBe('light')
+  expect(window.localStorage.getItem('catelink-theme')).toBe('light')
 })
 
 test('validates profile steps and keeps choices while moving back', async () => {
@@ -235,6 +247,10 @@ test('shows when no sample meeting times overlap', async () => {
   const user = userEvent.setup()
   render(<App />)
   await finishProfile(user)
+  await user.selectOptions(
+    screen.getByRole('combobox', { name: 'Filter by parish' }),
+    'Church of the Nativity of the Blessed Virgin Mary',
+  )
   await user.click(screen.getByRole('button', { name: /Joseph Tay, .* demo fit/ }))
   await user.click(screen.getByRole('button', { name: 'Send request' }))
   await user.click(screen.getByRole('button', { name: 'Preview sending request' }))
