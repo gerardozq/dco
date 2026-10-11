@@ -1,4 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react'
+import { MentorBubbles } from './MentorBubbles'
 import './App.css'
 
 const PARISHES = [
@@ -1428,7 +1429,7 @@ function App() {
       && (filters.area === 'Any' || mentor.area === filters.area),
     )
     .sort((first, second) => getMentorFit(second, profile) - getMentorFit(first, profile))
-    .slice(0, 50)
+    .slice(0, 25)
   // Ignore any empty entries in the mentor list so rendering never crashes.
   const selectedMentor = MENTORS.find((mentor) => mentor != null && mentor.id === selectedMentorId)
   const otherMatches = visibleMentors.filter((mentor) => mentor.id !== selectedMentorId).slice(0, 3)
@@ -2518,28 +2519,15 @@ function App() {
                 : `${visibleMentors.length} ${visibleMentors.length === 1 ? 'mentor' : 'mentors'} fit you`}
             </p>
             {visibleMentors.length > 0 ? (
-              <div className="mentor-bubbles" aria-label="Suggested mentors">
-                {visibleMentors.map((mentor) => (
-                  <button
-                    aria-label={`${mentor.name}, ${getMentorFit(mentor, profile)}% demo fit`}
-                    className={`mentor-bubble tone-${mentor.tone}`}
-                    key={mentor.id}
-                    onClick={() => openMentor(mentor.id)}
-                    style={{
-                      width: `${78 + (getMentorFit(mentor, profile) - 60) * 1.15}px`,
-                      height: `${78 + (getMentorFit(mentor, profile) - 60) * 1.15}px`,
-                    }}
-                    type="button"
-                  >
-                    <span className="bubble-content">
-                      <span className="bubble-initials">
-                        {mentor.name.split(' ').map((part) => part[0]).slice(0, 2).join('')}
-                      </span>
-                      <span className="bubble-name">{mentor.name.split(' ')[0]}</span>
-                    </span>
-                  </button>
-                ))}
-              </div>
+              <MentorBubbles
+                mentors={visibleMentors.map((mentor) => ({
+                  id: mentor.id,
+                  name: mentor.name,
+                  tone: mentor.tone,
+                  fit: getMentorFit(mentor, profile),
+                }))}
+                onSelect={openMentor}
+              />
             ) : (
               <div className="empty-mentors">
                 <p>Try clearing a filter to see other mentors.</p>

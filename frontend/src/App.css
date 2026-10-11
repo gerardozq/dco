@@ -1760,7 +1760,7 @@ body { background: var(--mesh); background-attachment: fixed; }
 .bubble-stage { height: auto; overflow: visible; }
 .mentor-bubble { flex-shrink: 0; }
 .bubble-count { border-color: var(--glass-line); background: var(--glass-strong); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); }
-/* Pack mentor bubbles into a compact, centered cloud instead of long horizontal rows. */
+/* Circle packing keeps score-sized bubbles out of uniform rows. */
 .bubble-stage {
   min-height: 650px;
   padding: 18px;
@@ -1775,30 +1775,27 @@ body { background: var(--mesh); background-attachment: fixed; }
   min-height: 610px;
   margin: 0 auto;
   padding: 54px 20px 24px;
-  display: flex;
-  flex-wrap: wrap;
-  align-content: center;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
+  display: block;
+}
+.mentor-bubble-cloud {
+  position: relative;
+  width: 100%;
 }
 .mentor-bubble {
-  width: clamp(66px, 8vw, 104px) !important;
-  height: clamp(66px, 8vw, 104px) !important;
-  flex: 0 0 clamp(66px, 8vw, 104px);
+  position: absolute;
+  max-width: none;
+  max-height: none;
   box-shadow: inset 0 -8px 18px rgba(255,255,255,.24), 0 10px 22px rgba(90,70,130,.16);
 }
-.mentor-bubble .bubble-initials { font-size: clamp(17px, 2.2vw, 25px); }
-.mentor-bubble .bubble-name { max-width: 84%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: clamp(10px, 1.2vw, 13px); }
+.mentor-bubble .bubble-content { width: 100%; }
+.mentor-bubble .bubble-initials { font-size: var(--bubble-initial-size); }
+.mentor-bubble .bubble-name { max-width: 84%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--bubble-name-size); }
 @media (min-width: 900px) {
   .mentor-bubbles { width: min(100%, 980px); }
 }
 @media (max-width: 600px) {
   .bubble-stage { min-height: 520px; padding: 10px; }
   .mentor-bubbles { min-height: 490px; padding: 54px 6px 18px; gap: 7px; }
-  .mentor-bubble { width: clamp(58px, 17vw, 82px) !important; height: clamp(58px, 17vw, 82px) !important; flex-basis: clamp(58px, 17vw, 82px); }
-  .mentor-bubble .bubble-initials { font-size: clamp(15px, 4.5vw, 20px); }
-  .mentor-bubble .bubble-name { font-size: 10px; }
 }
 .mentor-bubble { border: 1px solid rgba(255,255,255,.95); box-shadow: inset 0 -10px 20px rgba(255,255,255,.24), 0 12px 26px rgba(90,70,130,.18); }
 .tone-0 { background: rgba(150,208,236,.92); color: #0b2a3a; }

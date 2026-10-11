@@ -1,10 +1,19 @@
 // @vitest-environment jsdom
 import { cleanup, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { afterEach, expect, test } from 'vitest'
+import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import App from './App'
 
-afterEach(cleanup)
+beforeEach(() => {
+  vi.stubGlobal('ResizeObserver', class {
+    observe() {}
+    disconnect() {}
+  })
+})
+afterEach(() => {
+  cleanup()
+  vi.unstubAllGlobals()
+})
 
 async function startProfileSetup(user: ReturnType<typeof userEvent.setup>) {
   await user.type(screen.getByRole('textbox', { name: 'Email' }), 'catechist@example.com')
@@ -94,7 +103,8 @@ test('filters demo mentors, explains fit, and handles an empty result', async ()
   render(<App />)
   await finishProfile(user)
 
-  expect(screen.getByRole('status').textContent).toBe('50 mentors fit you')
+  expect(screen.getByRole('status').textContent).toBe('25 mentors fit you')
+  expect(screen.getAllByRole('button', { name: /% demo fit$/ })).toHaveLength(25)
   await user.selectOptions(screen.getByRole('combobox', { name: 'Filter by parish' }), 'Church of the Nativity of the Blessed Virgin Mary')
   await user.selectOptions(screen.getByRole('combobox', { name: 'Filter by time' }), 'Weekday morning')
   expect(screen.getByRole('status').textContent).toBe('No mentor fits all filters')

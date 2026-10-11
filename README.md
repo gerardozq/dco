@@ -26,6 +26,13 @@ On the welcome page and mentor-match preview, the gold and blue fish arcs start 
 and join once, following the prototype's timing. Reduced-motion users see the
 joined fish without animation.
 
+Mentor discovery uses a stable, non-uniform circle layout. Bubble diameter grows
+with relative demo match-fit scores among the displayed mentors, making even
+close scores visually distinct, and adapts to the available width. Equal scores
+produce equal sizes.
+Discovery displays up to 25 of the highest-scoring mentors after filtering.
+Displayed mentors remain selectable, including by keyboard.
+
 ```sh
 npm run lint
 npm test
