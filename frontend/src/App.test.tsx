@@ -38,6 +38,7 @@ test('renders the CateLink welcome screen', () => {
   expect(screen.getByRole('textbox', { name: 'Email' })).toBeDefined()
   expect(screen.getByRole('button', { name: 'Send me a sign-in link' })).toBeDefined()
   expect(screen.getByText(/No password to remember/)).toBeDefined()
+  expect(document.querySelector('.fish-mark-joining')).toBeNull()
 })
 
 test('validates profile steps and keeps choices while moving back', async () => {
@@ -158,6 +159,20 @@ test('previews an accepted mentor request as a match', async () => {
 
   expect(screen.getByRole('heading', { name: 'You and Ben are matched' })).toBeDefined()
   expect(screen.getByRole('button', { name: 'Say hello' })).toBeDefined()
+  const fish = screen.getByRole('img', { name: 'CateLink fish mark' })
+  expect(fish.classList.contains('fish-mark-joining')).toBe(true)
+  expect(fish.querySelectorAll('path')).toHaveLength(2)
+  const navigation = within(screen.getByRole('navigation', { name: 'Match navigation' }))
+  expect(navigation.getAllByRole('button')).toHaveLength(3)
+  expect(navigation.getAllByRole('button', { name: 'Return to welcome' })).toHaveLength(1)
+  await user.click(navigation.getByRole('button', { name: 'Back to mentors' }))
+  expect(screen.getByRole('heading', { name: 'Mentors for you' })).toBeDefined()
+  await user.click(screen.getByRole('button', { name: /Ben Tan, .* demo fit/ }))
+  await user.click(screen.getByRole('button', { name: 'Send request' }))
+  await user.click(screen.getByRole('button', { name: 'Preview sending request' }))
+  await user.click(screen.getByRole('button', { name: 'Mentor accepts' }))
+  await user.click(screen.getByRole('button', { name: 'Return to welcome' }))
+  expect(screen.getByRole('heading', { name: 'CateLink' })).toBeDefined()
 })
 
 test('opens a local chat, previews messages, and schedules only shared sample times', async () => {

@@ -44,6 +44,38 @@
   fill: #179ecc;
 }
 
+.fish-mark-joining {
+  display: block;
+  width: min(100%, 210px);
+  margin: 0 auto 24px;
+}
+
+.fish-mark-joining path {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: fish-join 1.4s cubic-bezier(.2, .8, .2, 1) .35s both;
+}
+
+.fish-mark-joining .fish-mark-gold {
+  --fish-apart: translate(-16px, -22px) rotate(-4deg);
+}
+
+.fish-mark-joining .fish-mark-blue {
+  --fish-apart: translate(16px, 22px) rotate(4deg);
+}
+
+@keyframes fish-join {
+  from { transform: var(--fish-apart); }
+  to { transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fish-mark-joining path {
+    animation: none;
+    transform: none;
+  }
+}
+
 .eyebrow {
   color: var(--gold);
   font-size: 12px;
@@ -381,6 +413,20 @@
   display: grid;
   gap: 10px;
   margin-top: 26px;
+}
+
+.match-navigation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.match-navigation .text-button {
+  min-height: 44px;
+  padding: 10px 16px;
+  background: transparent;
 }
 
 .secondary-button {

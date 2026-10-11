@@ -1096,10 +1096,10 @@ function MultiChoiceGroup({ label, options, selected, onToggle, hint }: MultiCho
   )
 }
 
-function FishMark() {
+function FishMark({ animated = false }: { animated?: boolean }) {
   return (
     <svg
-      className="fish-mark"
+      className={animated ? 'fish-mark fish-mark-joining' : 'fish-mark'}
       viewBox="68 -2 138 82"
       role="img"
       aria-label="CateLink fish mark"
@@ -2322,7 +2322,7 @@ function App() {
       return (
         <main className="welcome-page profile-page">{themeToggle}
           <section className="profile-card completion-card" aria-labelledby="matched-title">
-            <FishMark />
+            <FishMark animated />
             <p className="eyebrow">Mentor match · demo</p>
             <h1 className="profile-title" id="matched-title">
               You and {selectedMentor?.name.split(' ')[0]} are matched
@@ -2340,38 +2340,30 @@ function App() {
             >
               Say hello
             </button>
-            <button className="text-button" onClick={() => setRequestStage(null)} type="button">
-              Back to mentors
-            </button>
-            <button
-              className="text-button"
-              onClick={() => setJourneyView('inbox')}
-              type="button"
-            >
-              Preview mentor inbox
-            </button>
-            <button
-              className="text-button"
-              onClick={() => {
-                setRequestStage(null)
-                setShowProfile(false)
-              }}
-              type="button"
-            >
-              Return to welcome
-            </button>
-            <button
-              className="text-button"
-              onClick={() => {
-                setShowProfile(false)
-                setSelectedMentorId(null)
-                setRequestStage(null)
-                setJourneyView('match')
-              }}
-              type="button"
-            >
-              Return to welcome
-            </button>
+            <nav className="match-navigation" aria-label="Match navigation">
+              <button className="text-button" onClick={() => setRequestStage(null)} type="button">
+                Back to mentors
+              </button>
+              <button
+                className="text-button"
+                onClick={() => setJourneyView('inbox')}
+                type="button"
+              >
+                Preview mentor inbox
+              </button>
+              <button
+                className="text-button"
+                onClick={() => {
+                  setShowProfile(false)
+                  setSelectedMentorId(null)
+                  setRequestStage(null)
+                  setJourneyView('match')
+                }}
+                type="button"
+              >
+                Return to welcome
+              </button>
+            </nav>
           </section>
         </main>
       )
