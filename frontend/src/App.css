@@ -1711,6 +1711,46 @@ body { background: var(--mesh); background-attachment: fixed; }
 .bubble-stage { height: auto; overflow: visible; }
 .mentor-bubble { flex-shrink: 0; }
 .bubble-count { border-color: var(--glass-line); background: var(--glass-strong); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); }
+/* Pack mentor bubbles into a compact, centered cloud instead of long horizontal rows. */
+.bubble-stage {
+  min-height: 650px;
+  padding: 18px;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 20% 22%, rgba(190, 235, 255, .62), transparent 42%),
+    radial-gradient(ellipse at 78% 78%, rgba(255, 224, 105, .54), transparent 43%),
+    linear-gradient(145deg, rgba(255,255,255,.7), rgba(255,255,255,.18));
+}
+.mentor-bubbles {
+  width: min(100%, 900px);
+  min-height: 610px;
+  margin: 0 auto;
+  padding: 54px 20px 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.mentor-bubble {
+  width: clamp(66px, 8vw, 104px) !important;
+  height: clamp(66px, 8vw, 104px) !important;
+  flex: 0 0 clamp(66px, 8vw, 104px);
+  box-shadow: inset 0 -8px 18px rgba(255,255,255,.24), 0 10px 22px rgba(90,70,130,.16);
+}
+.mentor-bubble .bubble-initials { font-size: clamp(17px, 2.2vw, 25px); }
+.mentor-bubble .bubble-name { max-width: 84%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: clamp(10px, 1.2vw, 13px); }
+@media (min-width: 900px) {
+  .mentor-bubbles { width: min(100%, 980px); }
+}
+@media (max-width: 600px) {
+  .bubble-stage { min-height: 520px; padding: 10px; }
+  .mentor-bubbles { min-height: 490px; padding: 54px 6px 18px; gap: 7px; }
+  .mentor-bubble { width: clamp(58px, 17vw, 82px) !important; height: clamp(58px, 17vw, 82px) !important; flex-basis: clamp(58px, 17vw, 82px); }
+  .mentor-bubble .bubble-initials { font-size: clamp(15px, 4.5vw, 20px); }
+  .mentor-bubble .bubble-name { font-size: 10px; }
+}
 .mentor-bubble { border: 1px solid rgba(255,255,255,.95); box-shadow: inset 0 -10px 20px rgba(255,255,255,.24), 0 12px 26px rgba(90,70,130,.18); }
 .tone-0 { background: rgba(150,208,236,.92); color: #0b2a3a; }
 .tone-1 { background: rgba(251,213,90,.94); color: #2a2100; }
@@ -2465,4 +2505,168 @@ body { background-color: #faf7f4; }
   .welcome-page:not(.profile-page) .brand-mark {
     margin-top: clamp(24px, 4vh, 42px);
   }
+}
+
+
+/* Keep the page canvas in sync with the selected theme, outside the login card too. */
+:root[data-theme='dark'],
+:root[data-theme='dark'] body,
+:root[data-theme='dark'] #root,
+:root[data-theme='dark'] .welcome-page:not(.profile-page) {
+  background: var(--mesh) !important;
+  background-color: #17181d !important;
+  background-attachment: fixed !important;
+  color: var(--ink);
+}
+:root[data-theme='dark'] body {
+  min-height: 100vh;
+}
+:root[data-theme='dark'] .welcome-page:not(.profile-page) {
+  min-height: 100svh;
+}
+:root[data-theme='light'],
+:root[data-theme='light'] body,
+:root[data-theme='light'] #root,
+:root[data-theme='light'] .welcome-page:not(.profile-page) {
+  background: var(--mesh);
+  background-attachment: fixed;
+}
+
+
+/* Keep theme switching available on every app screen, and theme the page canvas too. */
+:root[data-theme='dark'] .welcome-page,
+:root[data-theme='dark'] .welcome-page.profile-page,
+:root[data-theme='dark'] .admin-page {
+  background: var(--mesh) !important;
+  background-attachment: fixed;
+  color: var(--ink);
+}
+:root[data-theme='dark'] .profile-card,
+:root[data-theme='dark'] .discover-card,
+:root[data-theme='dark'] .chat-card,
+:root[data-theme='dark'] .video-card,
+:root[data-theme='dark'] .mentor-sheet,
+:root[data-theme='dark'] .bubble-stage,
+:root[data-theme='dark'] .prototype-panel,
+:root[data-theme='dark'] .capacity-card,
+:root[data-theme='dark'] .request-card,
+:root[data-theme='dark'] .mentee-topics-card,
+:root[data-theme='dark'] .resource-card,
+:root[data-theme='dark'] .empty-resources,
+:root[data-theme='dark'] .posted-summary,
+:root[data-theme='dark'] .pre-session-card,
+:root[data-theme='dark'] .call-starters,
+:root[data-theme='dark'] .summary-card {
+  background-color: #25272e;
+  background-image: none;
+  border-color: rgba(255,255,255,.14);
+  color: var(--ink);
+  box-shadow: 0 18px 44px rgba(0,0,0,.22);
+}
+:root[data-theme='dark'] .bubble-stage {
+  background:
+    radial-gradient(ellipse at 20% 22%, rgba(24,82,107,.48), transparent 44%),
+    radial-gradient(ellipse at 78% 78%, rgba(112,83,22,.38), transparent 45%),
+    #25272e;
+}
+:root[data-theme='dark'] .profile-description,
+:root[data-theme='dark'] .field-hint,
+:root[data-theme='dark'] .profile-brand,
+:root[data-theme='dark'] .mentor-location,
+:root[data-theme='dark'] .mentor-bio,
+:root[data-theme='dark'] .fit-legend,
+:root[data-theme='dark'] .chat-message span,
+:root[data-theme='dark'] .capacity-card p,
+:root[data-theme='dark'] .resource-card p,
+:root[data-theme='dark'] .posted-summary p,
+:root[data-theme='dark'] .admin-stat-card p,
+:root[data-theme='dark'] .admin-panel > p,
+:root[data-theme='dark'] .admin-panel-heading p,
+:root[data-theme='dark'] .admin-footer {
+  color: var(--muted);
+}
+:root[data-theme='dark'] .profile-title,
+:root[data-theme='dark'] .profile-card h1,
+:root[data-theme='dark'] .profile-card h2,
+:root[data-theme='dark'] .discover-card h1,
+:root[data-theme='dark'] .discover-card h2,
+:root[data-theme='dark'] .chat-card h1,
+:root[data-theme='dark'] .video-card h1,
+:root[data-theme='dark'] .admin-main,
+:root[data-theme='dark'] .admin-main h1,
+:root[data-theme='dark'] .admin-main h2,
+:root[data-theme='dark'] .admin-main h3,
+:root[data-theme='dark'] .admin-table {
+  color: var(--ink);
+}
+:root[data-theme='dark'] .profile-input,
+:root[data-theme='dark'] .mentor-filters select,
+:root[data-theme='dark'] .admin-search,
+:root[data-theme='dark'] .chat-composer input,
+:root[data-theme='dark'] .request-note,
+:root[data-theme='dark'] input,
+:root[data-theme='dark'] select,
+:root[data-theme='dark'] textarea {
+  background: #191a20 !important;
+  border-color: rgba(255,255,255,.2);
+  color: var(--ink) !important;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,.2);
+}
+:root[data-theme='dark'] input::placeholder,
+:root[data-theme='dark'] textarea::placeholder {
+  color: #a9a7b2;
+  opacity: 1;
+}
+:root[data-theme='dark'] .choice-chip,
+:root[data-theme='dark'] .availability-cell,
+:root[data-theme='dark'] .schedule-option,
+:root[data-theme='dark'] .alternative-mentor,
+:root[data-theme='dark'] .video-controls button,
+:root[data-theme='dark'] .starter-tabs button,
+:root[data-theme='dark'] .secondary-button,
+:root[data-theme='dark'] .back-button,
+:root[data-theme='dark'] .clear-filters {
+  background: #30323a;
+  border-color: rgba(255,255,255,.18);
+  color: var(--ink);
+  box-shadow: none;
+}
+:root[data-theme='dark'] .choice-chip[aria-pressed="true"],
+:root[data-theme='dark'] .availability-cell[aria-pressed="true"],
+:root[data-theme='dark'] .starter-tabs button[aria-pressed="true"] {
+  background: #f5f3f0;
+  border-color: #f5f3f0;
+  color: #17181d;
+}
+:root[data-theme='dark'] .primary-button,
+:root[data-theme='dark'] .small-primary-button,
+:root[data-theme='dark'] .chat-composer button {
+  background: #f5f3f0;
+  color: #17181d;
+}
+:root[data-theme='dark'] .admin-sidebar {
+  background: rgba(30,32,39,.94);
+  color: var(--ink);
+}
+:root[data-theme='dark'] .admin-welcome-banner {
+  background: linear-gradient(115deg, #263e4b, #4a4024);
+  border-color: rgba(255,255,255,.14);
+  box-shadow: none;
+}
+:root[data-theme='dark'] .admin-welcome-banner h2,
+:root[data-theme='dark'] .admin-welcome-banner p,
+:root[data-theme='dark'] .admin-welcome-banner .admin-kicker {
+  color: var(--ink);
+}
+:root[data-theme='dark'] .admin-table th,
+:root[data-theme='dark'] .admin-table td {
+  border-color: rgba(255,255,255,.12);
+}
+:root[data-theme='dark'] .chat-message-you {
+  background: #f5f3f0;
+  color: #17181d;
+}
+@media (max-width: 520px) {
+  .theme-toggle { z-index: 1000; }
+  .welcome-page.profile-page { padding-top: 62px; }
 }

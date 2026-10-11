@@ -31,3 +31,93 @@ button, input, select, textarea { font: inherit; }
 button { color: inherit; cursor: pointer; }
 :focus-visible { outline: 3px solid #111214; outline-offset: 3px; }
 ::selection { background: #111214; color: #fff; }
+
+
+/* Accessible light/dark theme switch */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --ink: #f5f3f0;
+  --muted: #c0bdc8;
+  --line: rgba(255,255,255,.15);
+  --primary: #f5f3f0;
+  --on-primary: #151619;
+  --gold: #ffe27a;
+  --soft: rgba(28,29,34,.72);
+  --panel: rgba(28,29,34,.76);
+  --surface: rgba(38,39,45,.88);
+  --danger: #ff9b8d;
+  --bg: #17181d;
+  --mesh: radial-gradient(80% 60% at 10% 18%, #203746 0, transparent 72%), radial-gradient(80% 60% at 90% 86%, #514323 0, transparent 72%), #17181d;
+  background: var(--mesh);
+  color: var(--ink);
+}
+:root[data-theme='dark'] body { background: var(--mesh); color: var(--ink); }
+:root[data-theme='dark'] .welcome-card,
+:root[data-theme='dark'] .profile-card,
+:root[data-theme='dark'] .bubble-stage,
+:root[data-theme='dark'] .admin-panel,
+:root[data-theme='dark'] .admin-stat-card,
+:root[data-theme='dark'] .admin-pair-card,
+:root[data-theme='dark'] .admin-meetup-card { background-color: rgba(25,27,33,.88); color: var(--ink); border-color: rgba(255,255,255,.14); }
+:root[data-theme='dark'] input,
+:root[data-theme='dark'] select,
+:root[data-theme='dark'] textarea { background-color: rgba(20,21,26,.86); color: var(--ink); border-color: rgba(255,255,255,.22); }
+:root[data-theme='dark'] .secondary-button,
+:root[data-theme='dark'] .back-button,
+:root[data-theme='dark'] .text-button,
+:root[data-theme='dark'] .filter-chip { color: var(--ink); }
+:root[data-theme='dark'] .mentor-bubble { color: #f7f7f8; background: #30343c; border-color: rgba(255,255,255,.8); }
+:root[data-theme='dark'] .mentor-bubble.tone-1,
+:root[data-theme='dark'] .mentor-bubble.tone-2 { background: #174c60; }
+:root[data-theme='dark'] .mentor-bubble.tone-3 { background: #65551a; }
+.theme-toggle { position: fixed; z-index: 1000; top: max(14px, env(safe-area-inset-top)); right: max(14px, env(safe-area-inset-right)); display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--ink); box-shadow: 0 5px 18px rgba(30,30,50,.10); font-weight: 600; cursor: pointer; backdrop-filter: blur(14px); }
+.theme-toggle span { font-size: 18px; line-height: 1; }
+@media (max-width: 520px) { .theme-toggle { top: max(8px, env(safe-area-inset-top)); right: 8px; padding: 8px 11px; font-size: 12px; } }
+
+
+/* Complete dark theme surfaces and explicit text contrast */
+:root[data-theme='dark'] { color-scheme: dark; }
+:root[data-theme='dark'] body,
+:root[data-theme='dark'] #root { color: var(--ink); }
+:root[data-theme='dark'] .welcome-page:not(.profile-page) .welcome-card {
+  background: radial-gradient(90% 66% at 2% 3%, rgba(30,70,91,.76), transparent 77%), radial-gradient(84% 65% at 100% 100%, rgba(104,79,23,.58), transparent 78%), #202127;
+  background-clip: padding-box;
+  border-color: rgba(255,255,255,.10);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 20px 52px rgba(0,0,0,.34);
+  color: #f5f3f0;
+}
+:root[data-theme='dark'] .welcome-page:not(.profile-page) .brand-copy h1,
+:root[data-theme='dark'] .welcome-page:not(.profile-page) .welcome-intro,
+:root[data-theme='dark'] .welcome-page:not(.profile-page) .sign-in-form label,
+:root[data-theme='dark'] .welcome-page:not(.profile-page) .sign-in-note,
+:root[data-theme='dark'] .welcome-page:not(.profile-page) .form-notice,
+:root[data-theme='dark'] .profile-page,
+:root[data-theme='dark'] .profile-page h1,
+:root[data-theme='dark'] .profile-page h2,
+:root[data-theme='dark'] .profile-page h3,
+:root[data-theme='dark'] .admin-page,
+:root[data-theme='dark'] .admin-page h1,
+:root[data-theme='dark'] .admin-page h2,
+:root[data-theme='dark'] .admin-page h3 { color: #f5f3f0; }
+:root[data-theme='dark'] .welcome-page:not(.profile-page) .sign-in-form input {
+  color: #f5f3f0;
+  background: rgba(20,21,26,.72);
+  border-color: rgba(255,255,255,.24);
+  box-shadow: inset 0 1px 3px rgba(0,0,0,.18);
+}
+:root[data-theme='dark'] .welcome-page:not(.profile-page) .sign-in-form input::placeholder { color: #aaa8b4; opacity: 1; }
+:root[data-theme='dark'] .welcome-page:not(.profile-page) .sign-in-form .primary-button { background: #f5f3f0; color: #151619; }
+:root[data-theme='dark'] .welcome-page:not(.profile-page) .brand-copy .eyebrow { color: #ffe27a; }
+:root[data-theme='dark'] .theme-toggle { background: rgba(38,39,45,.94); color: #f5f3f0; border-color: rgba(255,255,255,.2); }
+:root[data-theme='dark'] :focus-visible { outline-color: #ffe27a; }
+:root[data-theme='dark'] ::selection { background: #ffe27a; color: #151619; }
+
+/* Light mode always uses high-contrast ink, including form placeholders. */
+:root[data-theme='light'] .welcome-page:not(.profile-page) .brand-copy h1,
+:root[data-theme='light'] .welcome-page:not(.profile-page) .welcome-intro,
+:root[data-theme='light'] .welcome-page:not(.profile-page) .sign-in-form label,
+:root[data-theme='light'] .welcome-page:not(.profile-page) .sign-in-note { color: #111214; }
+:root[data-theme='light'] .welcome-page:not(.profile-page) .welcome-intro,
+:root[data-theme='light'] .welcome-page:not(.profile-page) .sign-in-note { color: #5f5d68; }
+:root[data-theme='light'] .welcome-page:not(.profile-page) .sign-in-form input { color: #111214; }
+:root[data-theme='light'] .welcome-page:not(.profile-page) .sign-in-form input::placeholder { color: #777581; opacity: 1; }

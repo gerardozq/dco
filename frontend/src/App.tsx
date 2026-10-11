@@ -1118,6 +1118,15 @@ function FishMark() {
 
 function App() {
   const [email, setEmail] = useState('')
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    const saved = window.localStorage.getItem('catelink-theme')
+    return saved === 'dark' ? 'dark' : 'light'
+  })
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme
+    window.localStorage.setItem('catelink-theme', theme)
+  }, [theme])
+  const themeToggle = <button className="theme-toggle" onClick={() => setTheme((current) => current === 'light' ? 'dark' : 'light')} type="button" aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`} title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}><span aria-hidden="true">{theme === 'light' ? '☾' : '☀'}</span>{theme === 'light' ? 'Dark mode' : 'Light mode'}</button>
   const [isAdmin, setIsAdmin] = useState(false)
   const [adminTab, setAdminTab] = useState<'Overview' | 'Users' | 'Mentorships' | 'Meetups'>('Overview')
   const [adminSearch, setAdminSearch] = useState('')
@@ -1453,7 +1462,7 @@ function App() {
     ]
     const filteredUsers = users.filter((user) => [user.name, user.email, user.parish, user.role].some((value) => value.toLowerCase().includes(adminSearch.toLowerCase())))
     return (
-      <main className="admin-page">
+      <main className="admin-page"> {themeToggle}
         <aside className="admin-sidebar">
           <div className="admin-brand"><span className="admin-brand-icon"><FishMark /></span><div><strong>CateLink</strong><small>ADMIN SPACE</small></div></div>
           <nav className="admin-nav" aria-label="Admin navigation">
@@ -1475,7 +1484,7 @@ function App() {
 
   if (!showProfile) {
     return (
-      <main className="welcome-page">
+      <main className="welcome-page">{themeToggle}
         <section className="welcome-card" aria-labelledby="welcome-title">
           <div className="brand-mark" aria-hidden="true">
             <FishMark />
@@ -1522,7 +1531,7 @@ function App() {
     if (requestStage === 'matched') {
       if (journeyView === 'chat') {
         return (
-          <main className="welcome-page profile-page journey-page">
+          <main className="welcome-page profile-page journey-page">{themeToggle}
             <section className="chat-card" aria-labelledby="chat-title">
               <header className="chat-header">
                 <button
@@ -1754,7 +1763,7 @@ function App() {
 
       if (journeyView === 'prompt') {
         return (
-          <main className="welcome-page profile-page journey-page">
+          <main className="welcome-page profile-page journey-page">{themeToggle}
             <section className="profile-card prompt-card" aria-labelledby="prompt-title">
               <header className="profile-topbar">
                 <button className="back-button" onClick={() => setJourneyView('chat')} type="button">
@@ -1820,7 +1829,7 @@ function App() {
 
       if (journeyView === 'inbox') {
         return (
-          <main className="welcome-page profile-page journey-page">
+          <main className="welcome-page profile-page journey-page">{themeToggle}
             <section className="profile-card inbox-card" aria-labelledby="inbox-title">
               <header className="profile-topbar">
                 <button className="back-button" onClick={() => setJourneyView('match')} type="button">
@@ -1892,7 +1901,7 @@ function App() {
 
       if (journeyView === 'meeting-check') {
         return (
-          <main className="welcome-page profile-page journey-page">
+          <main className="welcome-page profile-page journey-page">{themeToggle}
             <section className="profile-card completion-card" aria-labelledby="meeting-check-title">
               <FishMark />
               <p className="eyebrow">A private check-in · preview</p>
@@ -1933,7 +1942,7 @@ function App() {
 
       if (journeyView === 'meeting-check-done') {
         return (
-          <main className="welcome-page profile-page journey-page">
+          <main className="welcome-page profile-page journey-page">{themeToggle}
             <section className="profile-card completion-card" aria-labelledby="meeting-thanks-title">
               <span className="completion-icon" aria-hidden="true">✓</span>
               <p className="eyebrow">Thank you</p>
@@ -1964,7 +1973,7 @@ function App() {
       if (journeyView === 'inbox-declined') {
         if (inboxReplySent) {
           return (
-            <main className="welcome-page profile-page journey-page">
+            <main className="welcome-page profile-page journey-page">{themeToggle}
               <section className="profile-card completion-card" aria-labelledby="kind-reply-title">
                 <span className="completion-icon" aria-hidden="true">✓</span>
                 <p className="eyebrow">Kind reply · preview only</p>
@@ -2001,7 +2010,7 @@ function App() {
           )
         }
         return (
-          <main className="welcome-page profile-page journey-page">
+          <main className="welcome-page profile-page journey-page">{themeToggle}
             <section className="profile-card completion-card" aria-labelledby="mentor-decline-title">
               <p className="eyebrow">Kind reply · preview</p>
               <h1 className="profile-title" id="mentor-decline-title">
@@ -2045,7 +2054,7 @@ function App() {
 
       if (journeyView === 'resources') {
         return (
-          <main className="welcome-page profile-page journey-page">
+          <main className="welcome-page profile-page journey-page">{themeToggle}
             <section className="profile-card resources-card" aria-labelledby="resources-title">
               <header className="profile-topbar">
                 <button className="back-button" onClick={() => setJourneyView('chat')} type="button">
@@ -2129,7 +2138,7 @@ function App() {
 
       if (journeyView === 'video') {
         return (
-          <main className="welcome-page profile-page journey-page">
+          <main className="welcome-page profile-page journey-page">{themeToggle}
             <section className="video-card" aria-labelledby="video-title">
               <header className="chat-header">
                 <button className="back-button" onClick={() => setJourneyView('chat')} type="button">
@@ -2251,7 +2260,7 @@ function App() {
 
       if (journeyView === 'summary') {
         return (
-          <main className="welcome-page profile-page journey-page">
+          <main className="welcome-page profile-page journey-page">{themeToggle}
             <section className="profile-card summary-card" aria-labelledby="summary-title">
               <header className="profile-topbar">
                 <button className="back-button" onClick={() => setJourneyView('video')} type="button">
@@ -2311,7 +2320,7 @@ function App() {
       }
 
       return (
-        <main className="welcome-page profile-page">
+        <main className="welcome-page profile-page">{themeToggle}
           <section className="profile-card completion-card" aria-labelledby="matched-title">
             <FishMark />
             <p className="eyebrow">Mentor match · demo</p>
@@ -2334,7 +2343,6 @@ function App() {
             <button className="text-button" onClick={() => setRequestStage(null)} type="button">
               Back to mentors
             </button>
-            <br />
             <button
               className="text-button"
               onClick={() => setJourneyView('inbox')}
@@ -2342,7 +2350,16 @@ function App() {
             >
               Preview mentor inbox
             </button>
-            <br />
+            <button
+              className="text-button"
+              onClick={() => {
+                setRequestStage(null)
+                setShowProfile(false)
+              }}
+              type="button"
+            >
+              Return to welcome
+            </button>
             <button
               className="text-button"
               onClick={() => {
@@ -2362,7 +2379,7 @@ function App() {
 
     if (requestStage === 'declined') {
       return (
-        <main className="welcome-page profile-page">
+        <main className="welcome-page profile-page">{themeToggle}
           <section className="profile-card" aria-labelledby="declined-title">
             <p className="eyebrow">A kind reply · demo</p>
             <h1 className="profile-title" id="declined-title">
@@ -2402,7 +2419,6 @@ function App() {
               <button className="primary-button" onClick={() => setRequestStage(null)} type="button">
                 Back to mentors
               </button>
-              <br />
               <button className="secondary-button" onClick={() => setShowProfile(false)} type="button">
                 Return to welcome
               </button>
@@ -2414,7 +2430,7 @@ function App() {
 
     if (requestStage === 'sent') {
       return (
-        <main className="welcome-page profile-page">
+        <main className="welcome-page profile-page">{themeToggle}
           <section className="profile-card" aria-labelledby="request-sent-title">
             <span className="completion-icon" aria-hidden="true">✓</span>
             <p className="eyebrow">Request sent · preview only</p>
@@ -2443,7 +2459,7 @@ function App() {
     }
 
     return (
-      <main className="welcome-page profile-page discover-page">
+      <main className="welcome-page profile-page discover-page">{themeToggle}
         <section className="discover-card" aria-labelledby="discover-title">
           <header className="discover-header">
             <button className="back-button" onClick={() => setComplete(false)} type="button">
@@ -2660,7 +2676,7 @@ function App() {
   }
 
   return (
-    <main className="welcome-page profile-page">
+    <main className="welcome-page profile-page">{themeToggle}
       <section className="profile-card" aria-labelledby="profile-title">
         <header className="profile-topbar">
           <button className="back-button" onClick={goBack} type="button">
